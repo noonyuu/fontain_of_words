@@ -1,0 +1,52 @@
+syntax = "proto3";
+package auth;
+
+option go_package = "../auth_grpc";
+
+//トークンで認証
+message AuthToken {
+    string token = 1;
+}
+
+//認証結果
+message AuthResult {
+    bool success = 1;
+    User user = 2;
+}
+
+//ユーザ
+message User {
+    //ユーザID
+	string UserID = 1;
+
+	//プロバイダ
+	string Provider = 2;
+
+	//プロバイダのユーザID
+	string ProviderUserId = 3;
+
+	//名前
+	string Name = 4;
+
+	//ニックネーム
+	string NickName = 5;
+
+	//苗字
+	string LastName = 6;
+
+	//名
+	string FirstName = 7;
+
+	//アイコンURL
+	string AvatarURL = 8;
+
+	//メールアドレス
+	string Email = 9;
+
+	//説明
+	string Description = 10;
+}
+
+service AuthServer {
+    rpc Auth(AuthToken) returns (AuthResult) {}
+}

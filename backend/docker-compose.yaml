@@ -1,0 +1,53 @@
+version: '3'
+services:
+    gin_goth:
+        container_name: auth_Server
+        image: golang:1.20.13-bullseye
+        ports:
+            - 10005:10005
+        volumes:
+            - ./gin_goth:/root/gin_goth
+        tty: true
+        restart: always
+        depends_on:
+            - redis
+            - postgresql
+
+    redis:
+        image: "redis:latest"
+        ports:
+            - "6379:6379"
+
+    postgresql:
+        image: postgres:12.18-bullseye
+        environment:
+            - TZ=Asia/Tokyo
+        ports:
+            - "15432:5432"
+        env_file:
+            - .env
+        volumes:
+            - ./postgresql:/var/lib/postgresql/data
+
+    app:
+        container_name: app
+        image: golang:1.20.13-bullseye
+        ports:
+            - 18888:18888
+        volumes:
+            - ./app:/root/app
+        tty: true
+        restart: always
+        depends_on:
+            - redis
+            - postgresql
+    nginx:
+        restart: always
+        image: nginx:latest
+        container_name: nginx
+        ports:
+            - "8443:443"
+        volumes:
+            # NGINXのコンフィグファイルをホストOSから、ゲストOSに連結する
+            - ./default.conf:/etc/nginx/conf.d/default.conf
+            - ./keys:/etc/nginx/keys
