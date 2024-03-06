@@ -8,8 +8,8 @@ import Btn from "./component/btn";
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    {/* <App /> */}
-    <Btn m="sssss"/>?
+    <App />
+    {/* <Btn m="sssss"/>? */}
   </React.StrictMode>
 );
 
