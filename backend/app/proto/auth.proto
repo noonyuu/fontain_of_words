@@ -6,12 +6,19 @@ option go_package = "../auth_grpc";
 //トークンで認証
 message AuthToken {
     string token = 1;
+	string UserAgent = 2;
 }
 
 //認証結果
 message AuthResult {
     bool success = 1;
     User user = 2;
+}
+
+//認証結果
+message RefreshResult {
+    bool success = 1;
+    string token = 2;
 }
 
 //ユーザ
@@ -49,4 +56,5 @@ message User {
 
 service AuthServer {
     rpc Auth(AuthToken) returns (AuthResult) {}
+	rpc Refresh(AuthToken) returns (RefreshResult) {}
 }

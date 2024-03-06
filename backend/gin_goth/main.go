@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/sha512"
 	"fmt"
-	
+
 	"log"
 	"net/http"
 	"os"
@@ -31,6 +31,8 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+
+	"github.com/mileusna/useragent"
 )
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
@@ -121,21 +123,29 @@ func main() {
 	//セッション設定
 	session_store := cookie.NewStore([]byte(key))
 	session_store.Options(sessions.Options{
-		MaxAge: exp_time,
-		Secure: true,
+		MaxAge:   exp_time,
+		Secure:   true,
 		HttpOnly: true,
 		SameSite: http.SameSiteLaxMode,
-		Path: "/",
-		Domain: domain,
+		Path:     "/",
+		Domain:   domain,
 	})
 
-	
 	router.Use(sessions.Sessions("AuthSession", session_store))
 
 	//ミドルウェア設定
 	router.Use(auth.Middleware())
 
-	router.GET("/", func(ctx *gin.Context) {
+	router.GET("/refresh", func(ctx *gin.Context) {
+		_, err := set_redirect_url(ctx)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+
 		//認証済み判定
 		authed := ctx.MustGet("authed")
 
@@ -146,15 +156,39 @@ func main() {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, gin.H{
-			"user": ctx.MustGet("user"),
-		})
+		//トークン解析
+		token_data, err := auth.ParseToken(ctx.MustGet("token").(string))
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+
+		//ユーザーエージェント取得
+		UserAgent := ctx.GetHeader("User-Agent")
+
+		//新しいトークン発行
+		new_token, err := auth.UpdateToken(token_data.TokenId, UserAgent)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+
+		//Cookie設定
+		ctx.SetCookie("token", new_token, exp_time, "/", domain, true, true)
+		//リダイレクト
+		ctx.Redirect(303, get_redirect_url(ctx)+"?refreshed=1")
 	})
 
 	router.GET("/:provider", func(ctx *gin.Context) {
-		
-		_,err := set_redirect_url(ctx)
-		
+
+		_, err := set_redirect_url(ctx)
+
 		//エラー処理
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -168,22 +202,11 @@ func main() {
 		gothic.BeginAuthHandler(ctx.Writer, ctx.Request)
 	})
 
-	router.GET("/.well-known/microsoft-identity-association.json",func(ctx *gin.Context) {
+	router.GET("/.well-known/microsoft-identity-association.json", func(ctx *gin.Context) {
 		ctx.File("./Secret/microsoft-identity-association.json")
 	})
 
 	router.GET("/:provider/callback", func(ctx *gin.Context) {
-		//認証済み判定
-		authed := ctx.MustGet("authed")
-
-		log.Println("redirect_url = " + get_redirect_url(ctx))
-		//認証済みか
-		if authed.(bool) {
-			//認証されていたら
-			ctx.Redirect(303, get_redirect_url(ctx))
-			return
-		}
-
 		//プロバイダ取得
 		provider := ctx.Param("provider")
 		//コンテキスト差し替え
@@ -261,8 +284,11 @@ func main() {
 
 		_ = get_user
 
+		//ユーザーエージェント取得
+		UserAgent := ctx.GetHeader("User-Agent")
+
 		//トークン生成
-		token, err := auth.GenToken(hash_data_str)
+		token, err := auth.GenToken(hash_data_str, UserAgent)
 
 		//エラー処理
 		if err != nil {
@@ -274,14 +300,13 @@ func main() {
 		ctx.SetSameSite(http.SameSiteLaxMode)
 		//トークン設定
 		ctx.SetCookie("token", token, exp_time, "/", domain, true, true)
-
 		//リダイレクト
 		ctx.Redirect(303, get_redirect_url(ctx))
 	})
 
-	router.GET("/logout", func(ctx *gin.Context) {
-		_,err := set_redirect_url(ctx)
-		
+	router.POST("/logout", func(ctx *gin.Context) {
+		_, err := set_redirect_url(ctx)
+
 		//エラー処理
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
@@ -315,11 +340,121 @@ func main() {
 		ctx.Redirect(303, get_redirect_url(ctx))
 	})
 
+	router.POST("/disable_session", func(ctx *gin.Context) {
+		//認証済み判定
+		authed := ctx.MustGet("authed")
+
+		//認証済みか
+		if !authed.(bool) {
+			//認証されていなかったら
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			return
+		}
+
+		//ユーザ取得
+		user := ctx.MustGet("user").(auth.User)
+
+		var data DisableData
+
+		//情報取得
+		if err := ctx.ShouldBindJSON(&data); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		}
+
+		//トークンからユーザID取得
+		userid,err := auth.Valid_token(data.SessionID)
+
+		//エラー処理
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		//ユーザーID比較
+		if userid != user.UserID {
+			ctx.JSON(http.StatusForbidden, gin.H{"message": "No permission"})
+			return
+		}
+
+		//トークン無効
+		err = auth.DisableToken(data.SessionID)
+
+		//エラー処理
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.GET("/sessions", func(ctx *gin.Context) {
+		//認証済み判定
+		authed := ctx.MustGet("authed")
+
+		//認証済みか
+		if !authed.(bool) {
+			//認証されていなかったら
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			return
+		}
+
+		//ユーザ取得
+		user := ctx.MustGet("user").(auth.User)
+
+		//トークン取得
+		tokens, err := auth.GetTokens(user.UserID)
+
+		//エラー処理
+		if err != nil {
+			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		//結果
+		results := []SessionData{}
+
+		for token_data := range tokens {
+			//ユーザーエージェント解析
+			ua := useragent.Parse(tokens[token_data].UserAgent)
+
+			//結果追加
+			results = append(results, SessionData{
+				IsMobile: ua.Mobile,
+				IsDesktop: ua.Desktop,
+				IsTablet: ua.Tablet,
+				IsBot: ua.Bot,
+
+				Browser: ua.Name,
+				Exptime: tokens[token_data].Exptime,
+				SessionID: tokens[token_data].SessionID,
+			})
+		}
+
+		//結果返却
+		ctx.JSON(200, gin.H{"sessions": results})
+	})
+
 	router.RunTLS(":3000", "./keys/server.crt", "./keys/server.key")
 
 }
 
-//リダイレクトURL取得
+type DisableData struct {
+	SessionID string
+}
+
+type SessionData struct {
+	IsMobile  bool
+	IsDesktop bool
+	IsTablet  bool
+	IsBot     bool
+
+	Browser   string
+	Exptime   int64
+	SessionID string
+}
+
+// リダイレクトURL取得
 func get_redirect_url(ctx *gin.Context) string {
 	//セッション取得
 	session := sessions.Default(ctx)
@@ -338,8 +473,8 @@ func get_redirect_url(ctx *gin.Context) string {
 	return url_str
 }
 
-//リダイレクトURL設定
-func set_redirect_url(ctx *gin.Context) (string,error) {
+// リダイレクトURL設定
+func set_redirect_url(ctx *gin.Context) (string, error) {
 	session := sessions.Default(ctx)
 
 	//パラメータから取得
@@ -353,8 +488,8 @@ func set_redirect_url(ctx *gin.Context) (string,error) {
 
 	//エラー処理
 	if err != nil {
-		return "/",err
+		return "/", err
 	}
 
-	return redirect_url,nil
+	return redirect_url, nil
 }
