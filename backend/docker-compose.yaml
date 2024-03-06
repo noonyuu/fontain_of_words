@@ -55,6 +55,7 @@ services:
             - "8443:443"
         volumes:
             # NGINXのコンフィグファイルをホストOSから、ゲストOSに連結する
-            - ./default.conf:/etc/nginx/conf.d/default.conf
-            - ./keys:/etc/nginx/keys
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./nginx/keys:/etc/nginx/keys
+            - ./nginx/statics:/etc/nginx/statics
         tty: true

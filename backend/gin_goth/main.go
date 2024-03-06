@@ -363,7 +363,7 @@ func main() {
 		}
 
 		//トークンからユーザID取得
-		userid,err := auth.Valid_token(data.SessionID)
+		userid, err := auth.Valid_token(data.SessionID)
 
 		//エラー処理
 		if err != nil {
@@ -420,13 +420,14 @@ func main() {
 
 			//結果追加
 			results = append(results, SessionData{
-				IsMobile: ua.Mobile,
+				IsMobile:  ua.Mobile,
 				IsDesktop: ua.Desktop,
-				IsTablet: ua.Tablet,
-				IsBot: ua.Bot,
+				IsTablet:  ua.Tablet,
+				IsBot:     ua.Bot,
+				OSstr:     ua.OS,
 
-				Browser: ua.Name,
-				Exptime: tokens[token_data].Exptime,
+				Browser:   ua.Name,
+				Exptime:   tokens[token_data].Exptime,
 				SessionID: tokens[token_data].SessionID,
 			})
 		}
@@ -449,6 +450,7 @@ type SessionData struct {
 	IsTablet  bool
 	IsBot     bool
 
+	OSstr     string
 	Browser   string
 	Exptime   int64
 	SessionID string
