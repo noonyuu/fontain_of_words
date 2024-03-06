@@ -1,6 +1,6 @@
 import React from 'react'
 import LoginBtn from '../component/loginBtn'
-import NewAccountBtn from '../component/NewAccountBtn';
+import NewAccountBtn from '../component/SiteBtn';
 import Footer from '../component/Footer';
 // アイコンのインポート
 import { FcGoogle } from "react-icons/fc";          // Google
