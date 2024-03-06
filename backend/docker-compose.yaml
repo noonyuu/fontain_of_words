@@ -57,5 +57,5 @@ services:
             # NGINXのコンフィグファイルをホストOSから、ゲストOSに連結する
             - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./nginx/keys:/etc/nginx/keys
-            - ./nginx/statics:/etc/nginx/statics
+            - ./nginx/statics:/etc/nginx/static/statics
         tty: true
