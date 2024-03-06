@@ -136,9 +136,7 @@ func main() {
 	//ミドルウェア設定
 	router.Use(auth.Middleware())
 
-	router.GET("/refresh", func(ctx *gin.Context) {
-		_, err := set_redirect_url(ctx)
-
+	router.POST("/refresh", func(ctx *gin.Context) {
 		//エラー処理
 		if err != nil {
 			log.Println(err)
@@ -179,19 +177,30 @@ func main() {
 			return
 		}
 
+		//セキュリティ
+		ctx.SetSameSite(http.SameSiteLaxMode)
 		//Cookie設定
 		ctx.SetCookie("token", new_token, exp_time, "/", domain, true, true)
-		//リダイレクト
-		ctx.Redirect(303, get_redirect_url(ctx)+"?refreshed=1")
+		//レスポンスを返す
+		ctx.JSON(200,gin.H{"message" : "success"})
 	})
 
 	router.GET("/:provider", func(ctx *gin.Context) {
-
 		_, err := set_redirect_url(ctx)
 
 		//エラー処理
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+			return
+		}
+
+		//認証済みか取得
+		authed := ctx.MustGet("authed")
+
+		//認証済みか
+		if authed.(bool) {
+			//認証されていたら
+			ctx.Redirect(http.StatusTemporaryRedirect,get_redirect_url(ctx))
 			return
 		}
 
@@ -305,21 +314,13 @@ func main() {
 	})
 
 	router.POST("/logout", func(ctx *gin.Context) {
-		_, err := set_redirect_url(ctx)
-
-		//エラー処理
-		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-			return
-		}
-
 		//認証済み判定
 		authed := ctx.MustGet("authed")
 
 		//認証済みか
 		if !authed.(bool) {
 			//認証されていなかったら
-			ctx.Redirect(http.StatusTemporaryRedirect, get_redirect_url(ctx))
+			ctx.JSON(http.StatusUnauthorized,gin.H{"message" : "not authenticated"})
 			return
 		}
 
@@ -336,8 +337,10 @@ func main() {
 		//cookie削除
 		ctx.SetCookie("token", "", -1, "/", domain, true, true)
 
-		//リダイレクト
-		ctx.Redirect(303, get_redirect_url(ctx))
+		//成功メッセージ
+		ctx.JSON(200,gin.H{
+			"message" : "success",
+		})
 	})
 
 	router.POST("/disable_session", func(ctx *gin.Context) {
@@ -388,7 +391,34 @@ func main() {
 
 		ctx.JSON(http.StatusOK, gin.H{"message": "success"})
 	})
-	router.GET("/sessions", func(ctx *gin.Context) {
+
+	router.POST("/getuser",func(ctx *gin.Context) {
+		//認証済み判定
+		authed := ctx.MustGet("authed")
+
+		//認証済みか
+		if !authed.(bool) {
+			//認証されていなかったら
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			return
+		}
+
+		user := ctx.MustGet("user").(auth.User)
+		
+		ctx.JSON(200,gin.H{
+			"id" : user.UserID,
+			"name" : user.Name,
+			"icon" : user.AvatarURL,
+			"mail" : user.Email,
+			"provider" : user.Provider,	
+
+			"first_name" : user.FirstName,
+			"nick_name" : user.NickName,
+			"last_name" : user.LastName,
+		})
+	})
+
+	router.POST("/sessions", func(ctx *gin.Context) {
 		//認証済み判定
 		authed := ctx.MustGet("authed")
 

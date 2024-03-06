@@ -28,19 +28,9 @@ func main() {
 
 		//キャスト
 		user := user_data.(*auth_grpc.User)
-
-		//更新済みか取得
-		refreshed := ctx.DefaultQuery("refreshed","0")
-
-		//更新済みではない場合
-		if refreshed != "1" {
-			ctx.Redirect(http.StatusTemporaryRedirect, "/auth/refresh?redirect_path=/app/")
-			return
-		}
-		
 		log.Println(user)
 
-		ctx.JSON(http.StatusOK, gin.H{"name" : user.Name})
+		ctx.Redirect(http.StatusTemporaryRedirect,"/statics/index.html")
 	})
 
 	router.GET("/ping", func(ctx *gin.Context) {
