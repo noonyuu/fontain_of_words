@@ -6,7 +6,8 @@ module.exports = {
       // 使う色
       colors: {
         // main: "#色"
-        main: "#00CDB5"
+        main: "#00CDB5",
+        login: "#87E9F5"
       }
       
     },
