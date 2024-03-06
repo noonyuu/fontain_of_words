@@ -51,6 +51,12 @@ func loadEnv() {
 	}
 }
 
+var (
+	//有効期限
+	exp_time = 31536000
+	domain = ""
+)
+
 func main() {
 	loadEnv()
 
@@ -100,10 +106,6 @@ func main() {
 
 	//ストアを設定する
 	gothic.Store = store
-
-	//有効期限
-	exp_time := 31536000
-	domain := ""
 
 	//プロバイダ設定
 	goth.UseProviders(
@@ -200,8 +202,14 @@ func main() {
 		//認証済みか
 		if authed.(bool) {
 			//認証されていたら
-			ctx.Redirect(http.StatusTemporaryRedirect,get_redirect_url(ctx))
-			return
+			//ログアウト処理
+			err := Logout(ctx)
+
+			//エラー処理
+			if err != nil {
+				ctx.JSON(500,gin.H{"error" : err.Error()})
+				return
+			}
 		}
 
 		provider := ctx.Param("provider")
@@ -324,18 +332,14 @@ func main() {
 			return
 		}
 
-		gothic.Logout(ctx.Writer, ctx.Request)
-		//トークン無効か
-		err = auth.DisableToken(ctx.MustGet("token").(string))
+		//ログアウト処理
+		err := Logout(ctx)
 
 		//エラー処理
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(500,gin.H{"error" : err.Error()})
 			return
 		}
-
-		//cookie削除
-		ctx.SetCookie("token", "", -1, "/", domain, true, true)
 
 		//成功メッセージ
 		ctx.JSON(200,gin.H{
@@ -468,6 +472,22 @@ func main() {
 
 	router.RunTLS(":3000", "./keys/server.crt", "./keys/server.key")
 
+}
+
+func Logout(ctx *gin.Context) error {
+	gothic.Logout(ctx.Writer, ctx.Request)
+	//トークン無効か
+	err := auth.DisableToken(ctx.MustGet("token").(string))
+
+	//エラー処理
+	if err != nil {
+		return err
+	}
+
+	//cookie削除
+	ctx.SetCookie("token", "", -1, "/", domain, true, true)
+
+	return nil
 }
 
 type DisableData struct {

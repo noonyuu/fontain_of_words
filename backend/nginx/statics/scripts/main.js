@@ -11,12 +11,18 @@ logout_button.addEventListener("click", async (evt) => {
     }
 })
 
+const icon_img = document.getElementById("icon_img");
+
 const getuser_button = document.getElementById("getuser_button");
 
 getuser_button.addEventListener("click", async (evt) => {
     evt.preventDefault();
 
-    
+    const uinfo = await GetInfo();
+
+    if (uinfo) {
+        icon_img.src = uinfo.icon;
+    }
 });
 
 const refresh_button = document.getElementById("refresh_button");
@@ -26,6 +32,8 @@ refresh_button.addEventListener("click", async (evt) => {
 
     console.log(await Refresh_Token());
 })
+
+getuser_button.click();
 
 async function Refresh_Token() {
     //トークン更新
@@ -55,4 +63,18 @@ async function Logout() {
 
     //それ以外の時
     return false;
+}
+
+async function GetInfo() {
+    //ログアウト
+    const req = await fetch("/auth/getuser",{
+        method: "POST",
+    });
+
+    //200の時
+    if (req.status == 200) {
+        return await req.json();
+    }
+
+    return null;
 }
