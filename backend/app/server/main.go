@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go_test/auth_grpc"
+	"gin_app/auth_grpc"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"log"
@@ -39,7 +39,13 @@ func (auth *Auth) Auth(
 	ctx context.Context,
 	token *auth_grpc.AuthToken,
 ) (*auth_grpc.AuthResult, error) {
-	
 	return &auth_grpc.AuthResult{Success: true}, nil
+}
+
+func (auth *Auth) Refresh(
+	ctx context.Context,
+	token *auth_grpc.AuthToken,
+) (*auth_grpc.RefreshResult, error) {
+	return &auth_grpc.RefreshResult{Success: true}, nil
 }
 

@@ -26,7 +26,7 @@ func Middleware() gin.HandlerFunc {
 		}
 
 		//トークン検証
-		userid, err := ParseToken(token)
+		token_data, err := ParseToken(token)
 
 		//エラー処理
 		if err != nil {
@@ -36,7 +36,7 @@ func Middleware() gin.HandlerFunc {
 		}
 
 		//ユーザ検索
-		user_data, err := GetUserInfo(userid)
+		user_data, err := GetUserInfo(token_data.BindId)
 
 		//エラー処理
 		if err != nil {
