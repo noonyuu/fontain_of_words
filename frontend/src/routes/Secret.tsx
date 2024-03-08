@@ -17,9 +17,9 @@ const Secret = () => {
       <ContextWrapper>
         <Header />
         <Routes>
-          <Route>
+          {/* <Route> */}
             <Route path="/" element={<HomePage />} />
-          </Route>
+          {/* </Route> */}
         </Routes>
       </ContextWrapper>
     </>
