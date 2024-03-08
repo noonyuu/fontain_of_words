@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import RoginPage from "./page/LoginPage";
 import NewAccountPage from "./page/NewAccountPage";
 import HomePage from "./page/HomePage";
+// テスト
+import Btn from "./component/btn";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
