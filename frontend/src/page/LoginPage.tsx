@@ -13,7 +13,7 @@ import { SiGithub } from "react-icons/si"; // GitHub
 import { FaLine } from "react-icons/fa"; // Line
 import { IoLogoMicrosoft } from "react-icons/io5"; // Microsoft
 
-const RoginPage = () => {
+const LoginPage = () => {
   const history = useNavigate();
   //  ログイン処理用関数
   const Login = (name: string) => {
@@ -78,4 +78,4 @@ const RoginPage = () => {
   );
 };
 
-export default RoginPage;
+export default LoginPage;

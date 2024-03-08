@@ -3,8 +3,6 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Header from "../component/Header";
 import HomePage from "../page/HomePage";
 import { ContextWrapper } from "../context/ContextWrapper";
-import NewAccountPage from "../page/NewAccountPage";
-import RoginPage from "../page/RoginPage";
 
 const Secret = () => {
   const navigate = useNavigate();
