@@ -5,6 +5,8 @@ import reportWebVitals from "./reportWebVitals";
 // ページのインポート
 import RoginPage from "./page/RoginPage";
 import NewAccountPage from "./page/NewAccountPage";
+// テスト
+import Btn from "./component/btn";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
