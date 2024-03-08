@@ -22,6 +22,16 @@
         <a href="#" class="a_button" id="getuser_button">ユーザ情報取得</a>
     </div>
 
+    <div>
+        <textarea id="result_text" cols="100" rows="10">
+        </textarea>
+        <br>
+        <textarea id="status" cols="100" rows="1">
+        </textarea>
+        <br>
+        <input type="button" onClick="vr_function();" value="音認開始">
+    </div>
+
     <img src="" id="icon_img" alt="" style="width: 300px; height: 300px;">
     
     <style>
@@ -43,6 +53,7 @@
     </style>
 
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/stt.js"></script>
 </body>
 
 </html>
