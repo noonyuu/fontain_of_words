@@ -1,50 +1,29 @@
-import React from 'react'
+import React from "react";
 import useSWR from "swr";
+import { useNavigate } from "react-router-dom";
 
 // コンポーネントのインポート
-import LoginBtn from '../component/loginBtn'
-import NewAccountBtn from '../component/SiteBtn';
-import Footer from '../component/Footer';
+import LoginBtn from "../component/loginBtn";
+import NewAccountBtn from "../component/SiteBtn";
+import Footer from "../component/Footer";
 // アイコンのインポート
-import { FcGoogle } from "react-icons/fc";          // Google
-import { BsDiscord } from "react-icons/bs";         // Discord
-import { SiGithub } from "react-icons/si";          // GitHub
-import { FaLine } from "react-icons/fa";            // Line
-import { IoLogoMicrosoft } from "react-icons/io5";  // Microsoft
-
-interface Content {
-  id: number;
-  name: string;
-  href: string;
-  image: string;
-}
-
-interface Pageable {
-  currentPage: number;
-  elementsOnPage: number;
-  totalElements: number;
-  totalPages: number;
-  previousPage: string;
-  nextPage: string;
-}
-
-interface Response {
-  content: Content[];
-  pageable: Pageable;
-}
+import { FcGoogle } from "react-icons/fc"; // Google
+import { BsDiscord } from "react-icons/bs"; // Discord
+import { SiGithub } from "react-icons/si"; // GitHub
+import { FaLine } from "react-icons/fa"; // Line
+import { IoLogoMicrosoft } from "react-icons/io5"; // Microsoft
 
 const RoginPage = () => {
+  const history = useNavigate();
   //  ログイン処理用関数
   const Login = (name: string) => {
-    const url = "https://digi-api.com/api/v1/digimon";
-    const { data, error, isLoading } = useSWR(url, fetch);
-    if(error) console.log(error)
-    if(!data) console.log("loading")
-    if(data) console.log(data)
+    console.log(name);
+  };
 
-
-    // console.log(name)
-  }
+  const register = () => {
+    console.log("register");
+    history("/NewAccountPage");
+  };
 
   return (
     <>
@@ -82,7 +61,7 @@ const RoginPage = () => {
             login={() => Login("Microsoft")}
           />
         </div>
-        <div className="mt-[120px] text-center lg:my-[50px]">
+        <div className="mt-[120px] text-center lg:my-[50px]" onClick={register}>
           <NewAccountBtn text="アカウントの新規登録はこちらから" />
         </div>
       </main>
@@ -91,6 +70,6 @@ const RoginPage = () => {
       </footer>
     </>
   );
-}
+};
 
-export default RoginPage
+export default RoginPage;

@@ -1,56 +1,26 @@
 import React from "react";
-import useSWR, { Fetcher } from "swr";
+import { useNavigate } from "react-router-dom";
+// コンポーネントのインポート
 import LoginBtn from "../component/loginBtn";
 import NewAccountBtn from "../component/SiteBtn";
 import Footer from "../component/Footer";
+// アイコンのインポート
 import { FcGoogle } from "react-icons/fc";
 import { BsDiscord } from "react-icons/bs";
 import { SiGithub } from "react-icons/si";
 import { FaLine } from "react-icons/fa";
 import { IoLogoMicrosoft } from "react-icons/io5";
 
-interface Content {
-  id: number;
-  name: string;
-  href: string;
-  image: string;
-}
-
-interface Pageable {
-  currentPage: number;
-  elementsOnPage: number;
-  totalElements: number;
-  totalPages: number;
-  previousPage: string;
-  nextPage: string;
-}
-
-interface Response {
-  content: Content[];
-  pageable: Pageable;
-}
-
-const fetcher: Fetcher<Response, string> = (url) =>
-  fetch(url).then((res) => res.json());
-
 const NewAccountPage = () => {
-  // useSWRフックを使ってデータを取得
-  // const { data, error } = useSWR<Response>(
-  //   `https://digi-api.com/api/v1/digimon/digimon`,
-  //   fetcher,
-  // );
+  const navigate = useNavigate();
 
+  const login = () => {
+    console.log("login");
+    navigate("/RoginPage");
+  };
   // 新規登録処理用関数
-  const handleLogin = async (name: string) => {
-    try {
-      const response = await fetch(
-        `https://digi-api.com/api/v1/digimon/digimon`,
-      );
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleLogin = async (name : string) => {
+    console.log(name);
   };
 
   return (
@@ -89,11 +59,11 @@ const NewAccountPage = () => {
             login={() => handleLogin("Microsoft")}
           />
         </div>
-        <div className="mt-[120px] text-center lg:my-[50px]">
+        <div className="mt-[120px] text-center lg:my-[50px]" onClick={login}>
           <NewAccountBtn text="ログインはこちら" />
         </div>
       </main>
-      <footer className="absolute bottom-0 h-[25px] w-dvw">
+      <footer className="absolute bottom-0 h-[25px] w-dvw" onClick={login}>
         <Footer />
       </footer>
     </>

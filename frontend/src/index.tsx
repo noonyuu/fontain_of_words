@@ -7,13 +7,15 @@ import RoginPage from "./page/RoginPage";
 import NewAccountPage from "./page/NewAccountPage";
 // テスト
 import Btn from "./component/btn";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     {/* 呼び出すページ */}
-    {/* <RoginPage /> ログインページ*/}
-    <NewAccountPage />
+    {/* <RoginPage /> ログインページ */}
+    {/* <NewAccountPage /> */}
+    <App />
   </React.StrictMode>
 );
 
