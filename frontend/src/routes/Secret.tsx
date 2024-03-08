@@ -8,9 +8,9 @@ const Secret = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      // navigate("/login");
-    }
+    // if (token) {
+    //   navigate("/login");
+    // }
   }, [navigate]);
   return (
     <>
@@ -18,7 +18,7 @@ const Secret = () => {
         <Header />
         <Routes>
           {/* <Route> */}
-            <Route path="/" element={<HomePage />} />
+          <Route path="/HomePage" element={<HomePage />} />
           {/* </Route> */}
         </Routes>
       </ContextWrapper>

@@ -1,13 +1,17 @@
 package auth
 
 import (
+	"time"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
 type TokenData struct {
-	BindId  string `gorm:"primaryKey"`
-	TokenId string
+	TokenId string	`gorm:"primaryKey"`
+	BindId  string 
+	Exptime time.Time
+	UserAgent string
 }
 
 var (
@@ -33,6 +37,14 @@ func Init() error {
 
 	//グローバル変数に保存
 	dbconn = db_conn
+
+	//JWt初期化
+	err = jwt_init()
+
+	//エラー処理
+	if err != nil {
+		return err
+	}
 
 	//初期化完了
 	initialized = true

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div style="display: flex; flex-wrap: wrap;">
+        <a href="/auth/google?redirect_path=/app/" class="a_button">google</a>
+        <a href="/auth/microsoftonline?redirect_path=/app/" class="a_button">microsoft</a>
+        <a href="/auth/line?redirect_path=/app/" class="a_button">line</a>
+        <a href="/auth/github?redirect_path=/app/" class="a_button">github</a>
+        <a href="/auth/discord?redirect_path=/app/" class="a_button">discord</a>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap;">
+        <a href="#" id="refresh_button" class="a_button">トークン更新</a>
+        <a href="#" class="a_button" id="logout_button">ログアウト</a>
+        <a href="#" class="a_button" id="getuser_button">ユーザ情報取得</a>
+    </div>
+
+    <img src="" id="icon_img" alt="" style="width: 300px; height: 300px;">
+    
+    <style>
+        .a_button {
+            display: block;
+            width: 300px;
+            padding: 15px 0;
+            margin-left: 50px;
+            margin-top: 20px;
+            background: #569f3c;
+            color: #FFF;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .a_button:hover {
+            background: #225f0d;
+        }
+    </style>
+
+    <script src="./scripts/main.js"></script>
+</body>
+
+</html>
