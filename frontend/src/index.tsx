@@ -3,15 +3,17 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 // ページのインポート
-import RoginPage from "./page/RoginPage";
+import RoginPage from "./page/LoginPage";
 import NewAccountPage from "./page/NewAccountPage";
+import HomePage from "./page/HomePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     {/* 呼び出すページ */}
     {/* <RoginPage /> ログインページ*/}
-    <NewAccountPage />
+    {/* <NewAccountPage /> 新規登録*/}
+    <HomePage />
   </React.StrictMode>
 );
 
