@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go_test/auth_grpc"
+	"gin_app/auth_grpc"
 	"log"
 
 	"golang.org/x/net/context"

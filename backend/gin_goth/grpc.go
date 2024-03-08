@@ -43,14 +43,14 @@ func (auther *Auth) Auth(
 	token *auth_grpc.AuthToken,
 ) (*auth_grpc.AuthResult, error) {
 	//トークン検証
-	uid, err := auth.ParseToken(token.Token)
+	token_data, err := auth.ParseToken(token.Token)
 	if err != nil {
 		//失敗した場合エラー返す
 		return &auth_grpc.AuthResult{Success: false}, err
 	}
 
 	//ユーザ取得
-	user, err := auth.GetUserInfo(uid)
+	user, err := auth.GetUserInfo(token_data.BindId)
 	if err != nil {
 		//失敗した場合エラー返す
 		return &auth_grpc.AuthResult{Success: false}, err
@@ -75,4 +75,31 @@ func (auther *Auth) Auth(
 
 	//成功した場合、認証結果を返す
 	return &result, nil
+}
+
+func (auther *Auth) Refresh(
+	ctx context.Context,
+	token *auth_grpc.AuthToken,
+) (*auth_grpc.RefreshResult, error) {
+	//トークン検証
+	token_data,err := auth.ParseToken(token.Token)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		//失敗した場合エラー返す
+		return &auth_grpc.RefreshResult{Success: false}, err
+	}
+
+	//新しいトークン発行
+	new_token,err := auth.UpdateToken(token_data.TokenId,"")
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		//失敗した場合エラー返す
+		return &auth_grpc.RefreshResult{Success: false}, err
+	}
+
+	return &auth_grpc.RefreshResult{Success: true, Token: new_token}, nil
 }
