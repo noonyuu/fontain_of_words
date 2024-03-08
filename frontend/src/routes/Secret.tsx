@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import Header from "../component/Header";
 import HomePage from "../page/HomePage";
 import { ContextWrapper } from "../context/ContextWrapper";
+import Footer from "../component/Footer";
 
 const Secret = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Secret = () => {
           <Route path="/HomePage" element={<HomePage />} />
           {/* </Route> */}
         </Routes>
+        <Footer />
       </ContextWrapper>
     </>
   );

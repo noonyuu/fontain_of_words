@@ -11,14 +11,14 @@ const Header = () => {
   };
 
   return (
-    <header className="border-main flex w-full border-b-2 py-2">
+    <header className="fixed top-0 flex w-full border-b-2 border-main py-2 z-50 h-16 my-auto bg-white">
       <button
-        className="ml-4 size-10 justify-start rounded-full z-50"
+        className="z-50 ml-4 size-10 justify-start rounded-full"
         onClick={onClickProfileIcon}
       >
         <img src={mainIcon} alt="mainIcon" />
       </button>
-      <div className="mb-1 mr-4 flex flex-grow justify-end">
+      <div className=" mr-4 flex flex-grow justify-end">
         <div className="flex items-center">三</div>
       </div>
 

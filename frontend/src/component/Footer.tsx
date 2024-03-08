@@ -3,10 +3,10 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className='Kaisei Tokumin bg-white text-center'>
+    <footer className="Kaisei Tokumin fixed bottom-0 h-[25px] w-dvw bg-white text-center">
       © 2024 - Copyright 言葉の泉.
-    </div>
-  )
+    </footer>
+  );
 }
 
 export default Footer
