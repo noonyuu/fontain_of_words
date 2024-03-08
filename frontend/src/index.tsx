@@ -2,10 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-// ページのインポート
-import RoginPage from "./page/LoginPage";
-import NewAccountPage from "./page/NewAccountPage";
-import HomePage from "./page/HomePage";
 // テスト
 import Btn from "./component/btn";
 import App from "./App";

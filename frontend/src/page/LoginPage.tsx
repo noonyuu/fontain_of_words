@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { useNavigate } from "react-router-dom";
 
 // コンポーネントのインポート
-import LoginBtn from "../component/loginBtn";
+import LoginBtn from "../component/LoginBtn";
 import NewAccountBtn from "../component/SiteBtn";
 import Footer from "../component/Footer";
 // アイコンのインポート
@@ -28,7 +28,7 @@ const LoginPage = () => {
   const a = () => {
     console.log("test");
     history("/secret/HomePage");
-  }
+  };
 
   return (
     <>

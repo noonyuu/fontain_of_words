@@ -7,7 +7,7 @@ interface Btnprops {
     login: (method: string) => void;
 }
 
-const loginBtn:React.FC<Btnprops> = ({name,icon,login}) => {
+const LoginBtn:React.FC<Btnprops> = ({name,icon,login}) => {
   return (
     <div>
       <button
@@ -23,4 +23,4 @@ const loginBtn:React.FC<Btnprops> = ({name,icon,login}) => {
   );
 }
 
-export default loginBtn
+export default LoginBtn;

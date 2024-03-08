@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 // コンポーネントのインポート
-import LoginBtn from "../component/loginBtn";
+import LoginBtn from "../component/LoginBtn";
 import NewAccountBtn from "../component/SiteBtn";
 import Footer from "../component/Footer";
 // アイコンのインポート
@@ -19,7 +19,7 @@ const NewAccountPage = () => {
     navigate("/RoginPage");
   };
   // 新規登録処理用関数
-  const handleLogin = async (name : string) => {
+  const handleLogin = async (name: string) => {
     console.log(name);
   };
 
