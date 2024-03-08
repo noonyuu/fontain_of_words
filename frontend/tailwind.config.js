@@ -8,8 +8,11 @@ module.exports = {
         // main: "#色"
         main: "#00CDB5",
         login: "#87E9F5"
+      },
+      backgroundImage: {
+        mainBg: "url('./img/mainBack_mobile.png')",
+        mainBg_Lg: "url('./img/mainBg-lg.png')" 
       }
-      
     },
   },
   plugins: [],

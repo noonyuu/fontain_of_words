@@ -10,7 +10,7 @@ import { FaLine } from "react-icons/fa";            // Line
 import { IoLogoMicrosoft } from "react-icons/io5";  // Microsoft
 
 
-const RoginPage = () => {
+const LoginPage = () => {
   return (
     <>
     <main>
@@ -34,4 +34,4 @@ const RoginPage = () => {
   )
 }
 
-export default RoginPage
+export default LoginPage
