@@ -25,7 +25,73 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	CreateWordBook("test", "test")
+	bookid, err := CreateWordBook("test", "test")
+
+	//エラー処理
+	if err != nil {
+		//パニックを起こす
+		log.Fatalln(err)
+	}
+
+	err = RegisterWord("test", bookid, database.Word{
+		Word:        "test",
+		Description: "test",
+		ID:          "aaa",
+	})
+
+	//エラー処理
+	if err != nil {
+		//パニックを起こす
+		log.Fatalln(err)
+	}
+
+	book, err := GetWordBook("test", bookid)
+
+	//エラー処理
+	if err != nil {
+		//パニックを起こす
+		log.Fatalln(err)
+	}
+
+	log.Println(book.Words)
+
+	books,err := GetWordBooksByUserID("test")
+
+	//エラー処理
+	if err != nil {
+		//パニックを起こす
+		log.Fatalln(err)
+	}
+
+	for _,book := range books {
+		log.Println(book.Name)
+		log.Println(book.ID)
+
+		log.Println(book.Words)
+	}
+	/*
+		//単語を生成
+		word, err := GenerateWord(database.Word{
+			Word:        "test",
+			Description: "test",
+			ID:          "aaa",
+		})
+
+		//エラー処理
+		if err != nil {
+			//パニックを起こす
+			log.Fatalln(err)
+		}
+
+		//単語を登録
+		err = RegisterWord("test", bookid, word)
+
+		//エラー処理
+		if err != nil {
+			//パニックを起こす
+			log.Fatalln(err)
+		}
+	*/
 
 	if false {
 		//ルーター
@@ -102,10 +168,10 @@ func CreateWordBook(userid string, name string) (string, error) {
 
 	//単語帳を作成
 	wordbook := database.WordBook{
-		ID:        bookid,
-		Userid:    userid,
-		Name:      name,
-		Words_Map: map[string]database.Word{},
+		ID:     bookid,
+		Userid: userid,
+		Name:   name,
+		Words:  []database.WordData{},
 	}
 
 	//単語帳を作成
@@ -135,7 +201,7 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 	var wordbook database.WordBook
 
 	//単語帳を取得
-	result := dbconn.Where("userid = ? AND id = ?", userid, bookid).First(&wordbook)
+	result := dbconn.Where("userid = ? AND id = ?", userid, bookid).Preload("Words").First(&wordbook)
 
 	//エラー処理
 	if result.Error != nil {
@@ -146,7 +212,7 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 	return wordbook, nil
 }
 
-//単語帳に単語を登録する
+// 単語帳に単語を登録する
 func RegisterWord(userid string, bookid string, word database.Word) error {
 	//データベース接続を取得する
 	dbconn, err := database.GetDB()
@@ -166,11 +232,21 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 		return err
 	}
 
+	//追加する
+	add_data := append(wordbook.Words, database.WordData{
+		BookID: bookid,
+		Wordid: word.ID,
+	})
+
 	//単語を追加
-	wordbook.Words_Map[word.ID] = word
+	wordbook.Words = add_data
+
+	log.Println(add_data)
 
 	//更新
 	result := dbconn.Save(&wordbook)
+
+	log.Println(result.RowsAffected)
 
 	//エラー処理
 	if result.Error != nil {
@@ -181,8 +257,8 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 	return nil
 }
 
-//単語を生成 (存在する場合は既存のものをとってくる)
-func GenerateWord(word database.Word) (database.Word,error) {
+// 単語を生成 (存在する場合は既存のものをとってくる)
+func GenerateWord(word database.Word) (database.Word, error) {
 	//データベース接続を取得する
 	dbconn, err := database.GetDB()
 
@@ -193,7 +269,7 @@ func GenerateWord(word database.Word) (database.Word,error) {
 	}
 
 	//単語を取得
-	word_data,err := GetWord(word.Word)
+	word_data, err := GetWord(word.Word)
 
 	//エラー処理
 	if err == gorm.ErrRecordNotFound {
@@ -209,7 +285,7 @@ func GenerateWord(word database.Word) (database.Word,error) {
 		}
 
 		//単語を取得
-		word_data,err = GetWord(word.Word)
+		word_data, err = GetWord(word.Word)
 
 		//エラー処理
 		if err != nil {
@@ -217,7 +293,7 @@ func GenerateWord(word database.Word) (database.Word,error) {
 			return database.Word{}, err
 		}
 
-	}else if err != nil {
+	} else if err != nil {
 		//それ以外の時
 		log.Println(err)
 		return database.Word{}, err
@@ -227,8 +303,8 @@ func GenerateWord(word database.Word) (database.Word,error) {
 	return word_data, nil
 }
 
-//文字列から単語を取得する (ない場合はnilを返す)
-func GetWord(word_str string) (database.Word,error) {
+// 文字列から単語を取得する (ない場合はnilを返す)
+func GetWord(word_str string) (database.Word, error) {
 	//データベース接続を取得する
 	dbconn, err := database.GetDB()
 
@@ -253,4 +329,32 @@ func GetWord(word_str string) (database.Word,error) {
 	}
 
 	return word, nil
+}
+
+//ユーザーIDから単語帳を取得する
+func GetWordBooksByUserID(userid string) ([]database.WordBook, error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return []database.WordBook{}, err
+	}
+
+	//単語帳を取得
+	var wordbooks []database.WordBook
+
+	//単語帳を取得
+	result := dbconn.Where(database.WordBook{
+		Userid: userid,
+	})
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return []database.WordBook{}, result.Error
+	}
+
+	return wordbooks, nil
 }

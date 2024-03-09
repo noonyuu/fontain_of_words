@@ -40,6 +40,13 @@ func Init() error {
 		return err
 	}
 
+	err = db.AutoMigrate(&WordData{})
+
+	//エラー処理
+	if err != nil {
+		return err
+	}
+
 	//グローバル変数に格納
 	dbconn = db
 
@@ -49,11 +56,11 @@ func Init() error {
 	return nil
 }
 
-func GetDB() (*gorm.DB,error) {
+func GetDB() (*gorm.DB, error) {
 	//初期化されていなかったら
-	if (!isinit) {
+	if !isinit {
 		//初期化されていないエラーを返す
 		return nil, errors.New("database is not initialized")
 	}
-	return dbconn,nil
+	return dbconn, nil
 }
