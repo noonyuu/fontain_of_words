@@ -3,19 +3,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 // ページのインポート
-import RoginPage from "./page/LoginPage";
-import NewAccountPage from "./page/NewAccountPage";
-import HomePage from "./page/HomePage";
+import Btn from "./component/btn"; // test
+import App from "./App";
 import VoicePage from "./page/VoicePage";
+import HomePage from "./page/HomePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     {/* 呼び出すページ */}
-    {/* <RoginPage /> ログインページ */}
-    {/* <NewAccountPage /> 新規登録 */}
+    {/* <RoginPage /> ログインページ*/}
+    {/* <NewAccountPage /> 新規登録*/}
     {/* <HomePage /> ホーム画面 */}
-  <VoicePage />
+    <VoicePage />
   </React.StrictMode>
 );
 
