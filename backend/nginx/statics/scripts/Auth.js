@@ -55,14 +55,14 @@ async function GetInfo() {
 
         //200の時
         if (req.status == 200) {
-            return (true, await req.json());
+            return [true, await req.json()];
         }
 
         //それ以外の時
-        return (false, null);
+        return [false, null];
     } catch (ex) {
         //エラー
         console.log(ex);
-        return (false, null)
+        return [false, null];
     }
 }

@@ -36,5 +36,9 @@ func main() {
 	router.GET("/ping", func(ctx *gin.Context) {
 		
 	})
+
+	router.POST("/login", func(ctx *gin.Context) {
+		
+	})
 	router.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
 }

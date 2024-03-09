@@ -7,7 +7,7 @@ logout_button.addEventListener("click", async (evt) => {
 
     //成功したら
     if (result) {
-        
+        window.location.reload();
     }
 })
 
@@ -21,7 +21,7 @@ getuser_button.addEventListener("click", async (evt) => {
     const uinfo = await GetInfo();
 
     if (uinfo) {
-        icon_img.src = uinfo.icon;
+        icon_img.src = uinfo[1].icon;
     }
 });
 
@@ -34,3 +34,11 @@ refresh_button.addEventListener("click", async (evt) => {
 })
 
 getuser_button.click();
+
+async function main() {
+    const uinfo = await GetInfo();
+    console.log(uinfo[0]);
+    console.log(await Refresh_Token());
+}
+
+main();
