@@ -1,4 +1,5 @@
-const base_path = "/"
+//ベースパス
+const base_path = "/";
 
 //トークンを更新する (成功したら true) それ以外は false
 async function Refresh_Token() {
