@@ -3,7 +3,13 @@ import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
 
 const Header = () => {
-  const {profileModal,setProfileModal} = useContext(GlobalContext)
+  const { profileModal, setProfileModal } = useContext(GlobalContext);
+  const [openMenu, setOpenMenu] = useState(false);
+
+  const handleMenuOpen = () => {
+    setOpenMenu(!openMenu);
+    setProfileModal(!profileModal);
+  };
 
   // プロフィールアイコンをクリックした時の処理
   const onClickProfileIcon = () => {
@@ -11,22 +17,47 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 flex w-full border-b-2 border-main py-2 z-50 h-16 my-auto bg-white">
+    <header className="fixed top-0 z-50 my-auto flex h-16 w-full border-b-2 border-main bg-white py-2">
       <button
         className="z-50 ml-4 size-10 justify-start rounded-full"
-        onClick={onClickProfileIcon}
       >
         <img src={mainIcon} alt="mainIcon" />
       </button>
-      <div className=" mr-4 flex flex-grow justify-end">
-        <div className="flex items-center">三</div>
+      <div className="mr-4 flex flex-grow justify-end">
+        <button
+          onClick={handleMenuOpen}
+          type="button"
+          className="z-50 space-y-2"
+        >
+          <div
+            className={
+              openMenu
+                ? "h-0.5 w-8 translate-y-2.5 rotate-45 bg-gray-600 transition duration-500 ease-in-out"
+                : "h-0.5 w-8 bg-gray-600 transition duration-500 ease-in-out"
+            }
+          />
+          <div
+            className={
+              openMenu
+                ? "opacity-0 transition duration-500 ease-in-out"
+                : "h-0.5 w-8 bg-gray-600 transition duration-500 ease-in-out"
+            }
+          />
+          <div
+            className={
+              openMenu
+                ? "h-0.5 w-8 -rotate-45 bg-gray-600 transition duration-500 ease-in-out"
+                : "h-0.5 w-8 bg-gray-600 transition duration-500 ease-in-out"
+            }
+          />
+        </button>
       </div>
 
       {/* profile modal */}
       <nav
         className={
           profileModal
-            ? "fixed left-0 top-0 flex h-full w-2/3 items-center justify-center bg-white md:w-2/5 lg:w-1/3"
+            ? "fixed right-0 top-0 flex h-full w-2/3 items-center justify-center bg-white md:w-2/5 lg:w-1/3"
             : "hidden"
         }
       >
@@ -46,11 +77,6 @@ const Header = () => {
             <p className="mt-4 text-center text-base">
               user:<span>kento</span>
             </p>
-            <div className="mt-2 flex justify-center">
-              <button type="button" className="px-2 py-1 text-sm">
-                アカウントを管理
-              </button>
-            </div>
           </div>
           {/* 画面下部に配置 */}
           <div className="mb-8 mt-auto">
