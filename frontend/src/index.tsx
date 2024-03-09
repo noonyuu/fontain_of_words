@@ -6,14 +6,16 @@ import reportWebVitals from "./reportWebVitals";
 import RoginPage from "./page/LoginPage";
 import NewAccountPage from "./page/NewAccountPage";
 import HomePage from "./page/HomePage";
+import VoicePage from "./page/VoicePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     {/* 呼び出すページ */}
-    {/* <RoginPage /> ログインページ*/}
-    {/* <NewAccountPage /> 新規登録*/}
-    <HomePage />
+    {/* <RoginPage /> ログインページ */}
+    {/* <NewAccountPage /> 新規登録 */}
+    {/* <HomePage /> ホーム画面 */}
+  <VoicePage />
   </React.StrictMode>
 );
 

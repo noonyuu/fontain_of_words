@@ -7,11 +7,14 @@ module.exports = {
       colors: {
         // main: "#色"
         main: "#00CDB5",
-        login: "#87E9F5"
+        login: "#87E9F5",
+        mark: "#E35D6E"
       },
       backgroundImage: {
         mainBg: "url('./img/mainBack_mobile.png')",
-        mainBg_Lg: "url('./img/mainBg-lg.png')" 
+        mainBg_lg: "url('./img/mainBg-lg.png')" ,
+        voiceBg: "url('./img/voiceBack.png')",
+        voiceBg_lg: "url('./img/voiceBg_lg.png')"
       }
     },
   },
