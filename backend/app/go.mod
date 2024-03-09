@@ -1,4 +1,4 @@
-module go_test
+module gin_app
 
 go 1.20
 
