@@ -5,10 +5,17 @@ import HomePage from "../page/HomePage";
 import { ContextWrapper } from "../context/ContextWrapper";
 import Footer from "../component/Footer";
 
+import { GetInfo, Refresh_Token } from "../auth/Auth";
+
 const Secret = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // if (!GetInfo()) {
+    //   navigate("/LoginPage");
+    // }
+    Refresh_Token();
+    // const token = localStorage.getItem("token");
     // if (token) {
     //   navigate("/login");
     // }
