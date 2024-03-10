@@ -2,25 +2,29 @@ import React, { useContext, useState } from "react";
 import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
 
+import { Logout } from "../auth/Auth";
+
 const Header = () => {
   const { profileModal, setProfileModal } = useContext(GlobalContext);
   const [openMenu, setOpenMenu] = useState(false);
 
+  // メニューを開く処理
   const handleMenuOpen = () => {
     setOpenMenu(!openMenu);
     setProfileModal(!profileModal);
   };
 
-  // プロフィールアイコンをクリックした時の処理
-  const onClickProfileIcon = () => {
-    setProfileModal(!profileModal);
+  // ログアウト処理
+  const handleLogout = async () => {
+    const result = await Logout();
+    if (result) {
+      console.log("ログアウトしました");
+    }
   };
 
   return (
     <header className="fixed top-0 z-50 my-auto flex h-16 w-full border-b-2 border-main bg-white py-2">
-      <button
-        className="z-50 ml-4 size-10 justify-start rounded-full"
-      >
+      <button className="z-50 ml-4 size-10 justify-start rounded-full">
         <img src={mainIcon} alt="mainIcon" />
       </button>
       <div className="mr-4 flex flex-grow justify-end">
@@ -64,11 +68,6 @@ const Header = () => {
         <div className="flex h-full w-full flex-col justify-between">
           {/* 画面上部に配置 */}
           <div>
-            {/* <img
-              src={mainIcon}
-              alt=""
-              className="my-2 ml-4 size-10 justify-start rounded-full"
-            /> */}
             <img
               src={mainIcon}
               alt="UserIcon"
@@ -84,12 +83,12 @@ const Header = () => {
               <button
                 type="button"
                 className="px-2 py-1 text-sm"
-                onClick={onClickProfileIcon}
+                onClick={handleLogout}
               >
                 ログアウト
               </button>
             </div>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <button
                 type="button"
                 className="mt-8 px-2 py-1 text-sm"
@@ -97,7 +96,7 @@ const Header = () => {
               >
                 アカウントを削除する
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
