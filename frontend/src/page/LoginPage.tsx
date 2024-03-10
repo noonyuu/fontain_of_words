@@ -1,5 +1,3 @@
-import React from "react";
-import useSWR from "swr";
 import { useNavigate } from "react-router-dom";
 
 // コンポーネントのインポート
@@ -13,11 +11,21 @@ import { SiGithub } from "react-icons/si"; // GitHub
 import { FaLine } from "react-icons/fa"; // Line
 import { IoLogoMicrosoft } from "react-icons/io5"; // Microsoft
 
+import { Refresh_Token, Logout, GetInfo } from "../auth/Auth";
+
 const LoginPage = () => {
   const history = useNavigate();
   //  ログイン処理用関数
-  const Login = (name: string) => {
-    console.log(name);
+  const Login = async (name: string, retryCount: number = 0) => {
+    fetch("http://localhost:8000/auth/login", {}).then((response) => {
+      console.log(response);
+      if (response.status === 200) {
+        console.log("ログイン成功");
+        history("/secret/HomePage");
+      } else {
+        console.log("ログイン失敗");
+      }
+    });
   };
 
   const register = () => {
