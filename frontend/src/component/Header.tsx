@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="border-main flex w-full border-b-2 py-2">
+    <header className="fixed top-0 z-50 my-auto flex h-16 w-full border-b-2 border-main bg-white py-2">
       <button
         className="ml-4 size-10 justify-start rounded-full z-50"
         onClick={onClickProfileIcon}

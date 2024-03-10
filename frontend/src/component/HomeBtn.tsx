@@ -7,7 +7,7 @@ interface Btnprops {
 
 const HomeBtn:React.FC<Btnprops> = ({text}) => {
   return (
-    <button className='bg-white rounded-3xl text-center w-40 py-2 text-2xl font-bold'>
+    <button className='bg-white rounded-full text-center w-40 lg:w-52 py-2 text-2xl lg:text-4xl font-bold'>
       {text}
     </button>
   )

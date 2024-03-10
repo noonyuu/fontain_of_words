@@ -12,9 +12,15 @@ module.exports = {
       },
       backgroundImage: {
         mainBg: "url('./img/mainBack_mobile.png')",
-        mainBg_lg: "url('./img/mainBg-lg.png')" ,
+        mainBg_md: "url('./img/mainBg_md.png')",
+        mainBg_lg: "url('./img/mainBg-lg.png')",
         voiceBg: "url('./img/voiceBack.png')",
-        voiceBg_lg: "url('./img/voiceBg_lg.png')"
+        voiceBg_md: "url('./img/voiceBack_md.png')",
+        voiceBg_lg: "url('./img/voiceBg_lg.png')",
+        circle: "url('./img/Ellipse.png')"
+      },
+      dropShadow: {
+        mainShadow: "0px 3px 1px rgba(0,4,4,0.25)"
       }
     },
   },

@@ -8,17 +8,20 @@ const HomePage = () => {
   const { profileModal } = useContext(GlobalContext);
   
   return (
-    <main
-      className={`h-full ${profileModal ?  "bg-gray-200 bg-opacity-50" : "bg-white"} bg-bottom	bg-cover bg-mainBg lg:bg-mainBg_Lg`}>
-        <div className='bg-white w-dvw h-[51.97px] lg:h-[70px]'>header</div>
-        <div className='Kaisei Tokumin text-center text-white text-5xl lg:text-8xl mt-40 lg:mt-20'>言葉の泉</div>
-        <div className='text-center'><HomeBtn text='新規作成' /></div>
-        <HomeBtn_circle position='float-right' />
-        <div className='mx-auto'><HomeBtn text='単語帳' /></div>
-        <div className='absolute bottom-0 h-[25px] w-dvw'><Footer /></div>
+    <main className="h-full overflow-y-auto bg-mainBg bg-cover bg-fixed bg-bottom pt-16 md:bg-mainBg_md lg:bg-mainBg_lg">
+        <div className='Kaisei Tokumin text-center text-white text-6xl lg:text-8xl drop-shadow-mainShadow mt-20'>言葉の泉</div>
+        <div className="flex justify-center items-center mt-28">
+          <div className='text-center drop-shadow-mainShadow'><HomeBtn text='新規作成' /></div>
+          <HomeBtn_circle position='translate-x-[6.7rem] lg:translate-x-[8.5rem] size-10 bg-[#C5FFF8]' />
+          <HomeBtn_circle position='translate-x-36 lg:translate-x-[11.4rem] size-5 bg-[#7BFFEF]' />
+        </div>
+        <div className="flex justify-center items-center mt-9">
+          <div className='text-center drop-shadow-mainShadow'><HomeBtn text='単語帳' /></div>
+          <HomeBtn_circle position='-translate-x-[6.7rem] lg:-translate-x-[8.5rem] size-10  bg-[#C5FFF8]' />
+          <HomeBtn_circle position='-translate-x-36 lg:-translate-x-[11.4rem] size-5 bg-[#7BFFEF]' />
+        </div>
     </main>
   );
 };
 
 export default HomePage;
-      
