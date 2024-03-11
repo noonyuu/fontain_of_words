@@ -11,19 +11,18 @@ const Router = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Secret");
-    // if (!GetInfo()) {
+    // 現在のパスが/ならloginへ遷移
+    if (window.location.pathname === "/") {
+      navigate("/LoginPage");
+    }
+    // if (GetInfo()) {
     //   navigate("/LoginPage");
     // }
     Refresh_Token();
-    // const token = localStorage.getItem("token");
-    // if (token) {
-    //   navigate("/login");
-    // }
   }, [navigate]);
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
+      {/* <Route path="/" element={<LoginPage />} /> */}
       <Route path="/NewAccountPage" element={<NewAccountPage />} />
       <Route path="/LoginPage" element={<LoginPage />} />
       <Route path="secret/*" element={<Secret />} />
