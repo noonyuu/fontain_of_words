@@ -17,15 +17,30 @@ const LoginPage = () => {
   const history = useNavigate();
   //  ログイン処理用関数
   const Login = async (name: string, retryCount: number = 0) => {
-    fetch("http://localhost:8000/auth/login", {}).then((response) => {
-      console.log(response);
-      if (response.status === 200) {
-        console.log("ログイン成功");
-        history("/secret/HomePage");
-      } else {
-        console.log("ログイン失敗");
-      }
-    });
+    try {
+      console.log("ログイン処理開始");
+      const response = await fetch("/auth/google?redirect_path=/app/", {});
+      // console.log(response);
+
+      // if (response.status === 200) {
+      //   console.log("ログイン成功");
+      //   history("/secret/HomePage");
+      // } else {
+      //   console.log("ログイン失敗");
+      // }
+    } catch (error) {
+      console.error("リクエストエラー:", error);
+
+      // // リトライ回数が設定されており、まだリトライ可能な場合にリトライを試行
+      // const maxRetryCount = 3;
+      // if (retryCount < maxRetryCount) {
+      //   console.log(`リトライ回数: ${retryCount}`);
+      //   await Login(name, retryCount + 1);
+      // } else {
+      //   console.error("リトライ回数の上限に達しました");
+      //   // リトライ回数の上限に達した場合、適切なエラー処理を行うか、ユーザーにメッセージを表示するなどの対処が必要です
+      // }
+    }
   };
 
   const register = () => {
@@ -48,30 +63,22 @@ const LoginPage = () => {
           ログイン
         </div>
         <div className="text-center">
-          <LoginBtn
-            name="Google"
-            icon={<FcGoogle />}
-            login={() => Login("Google")}
-          />
+          <LoginBtn name="Google" icon={<FcGoogle />} loginLink="google" />
           <LoginBtn
             name="Discord"
             icon={<BsDiscord color="#5865F2" />}
-            login={() => Login("Discord")}
+            loginLink="discord"
           />
-          <LoginBtn
-            name="GitHub"
-            icon={<SiGithub />}
-            login={() => Login("GitHub")}
-          />
+          <LoginBtn name="GitHub" icon={<SiGithub />} loginLink="github" />
           <LoginBtn
             name="Line"
             icon={<FaLine color="#4ECB71" />}
-            login={() => Login("Line")}
+            loginLink="line"
           />
           <LoginBtn
             name="Microsoft"
             icon={<IoLogoMicrosoft />}
-            login={() => Login("Microsoft")}
+            loginLink="microsoft"
           />
         </div>
         <div className="mt-[120px] text-center lg:my-[50px]" onClick={register}>

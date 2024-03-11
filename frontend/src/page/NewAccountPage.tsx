@@ -16,7 +16,7 @@ const NewAccountPage = () => {
 
   const login = () => {
     console.log("login");
-    navigate("/RoginPage");
+    navigate("/LoginPage");
   };
   // 新規登録処理用関数
   const handleLogin = async (name: string) => {
@@ -36,27 +36,27 @@ const NewAccountPage = () => {
           <LoginBtn
             name="Google"
             icon={<FcGoogle />}
-            login={() => handleLogin("Google")}
+            loginLink="google"
           />
           <LoginBtn
             name="Discord"
             icon={<BsDiscord color="#5865F2" />}
-            login={() => handleLogin("Discord")}
+            loginLink="discord"
           />
           <LoginBtn
             name="GitHub"
             icon={<SiGithub />}
-            login={() => handleLogin("GitHub")}
+            loginLink="github"
           />
           <LoginBtn
             name="Line"
             icon={<FaLine color="#4ECB71" />}
-            login={() => handleLogin("Line")}
+            loginLink="line"
           />
           <LoginBtn
             name="Microsoft"
             icon={<IoLogoMicrosoft />}
-            login={() => handleLogin("Microsoft")}
+            loginLink="microsoft"
           />
         </div>
         <div className="mt-[120px] text-center lg:my-[50px]" onClick={login}>
