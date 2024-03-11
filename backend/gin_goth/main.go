@@ -354,7 +354,7 @@ func main() {
 		//認証済みか
 		if !authed.(bool) {
 			//認証されていなかったら
-			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			return
 		}
 
@@ -403,7 +403,7 @@ func main() {
 		//認証済みか
 		if !authed.(bool) {
 			//認証されていなかったら
-			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			return
 		}
 
@@ -429,7 +429,7 @@ func main() {
 		//認証済みか
 		if !authed.(bool) {
 			//認証されていなかったら
-			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "unauthorized"})
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			return
 		}
 
