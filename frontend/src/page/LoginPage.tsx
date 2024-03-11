@@ -30,16 +30,6 @@ const LoginPage = () => {
       // }
     } catch (error) {
       console.error("リクエストエラー:", error);
-
-      // // リトライ回数が設定されており、まだリトライ可能な場合にリトライを試行
-      // const maxRetryCount = 3;
-      // if (retryCount < maxRetryCount) {
-      //   console.log(`リトライ回数: ${retryCount}`);
-      //   await Login(name, retryCount + 1);
-      // } else {
-      //   console.error("リトライ回数の上限に達しました");
-      //   // リトライ回数の上限に達した場合、適切なエラー処理を行うか、ユーザーにメッセージを表示するなどの対処が必要です
-      // }
     }
   };
 
