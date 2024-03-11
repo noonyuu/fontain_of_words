@@ -57,6 +57,7 @@ func main() {
 
 		type BookData struct {
 			Name string
+			ID   string
 		}
 
 		type Get_BookData struct {
@@ -155,6 +156,44 @@ func main() {
 
 			//成功
 			ctx.JSON(200, gin.H{"words": result})
+		})
+
+		word_group.POST("/delete", func(ctx *gin.Context) {
+			//削除するエンドポイント (単語帳)
+			var data BookData
+			//データ取得
+			if err := ctx.ShouldBindJSON(&data); err != nil {
+				log.Println(err)
+				//エラーを返す
+				ctx.JSON(500, gin.H{"message": err.Error()})
+				return
+			}
+
+			//データ取得
+			user_data := ctx.MustGet("user")
+			success := ctx.MustGet("success")
+
+			//認証されているか
+			if !success.(bool) {
+				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+				return
+			}
+
+			//キャスト
+			user := user_data.(*auth_grpc.User)
+
+			//単語帳を作成
+			bookid, err := CreateWordBook(user.UserID, data.Name)
+
+			//エラー処理
+			if err != nil {
+				log.Println(err)
+				ctx.JSON(500, gin.H{"message": err.Error()})
+				return
+			}
+
+			//成功
+			ctx.JSON(200, gin.H{"bookid": bookid})
 		})
 
 		word_group.POST("/create", func(ctx *gin.Context) {
