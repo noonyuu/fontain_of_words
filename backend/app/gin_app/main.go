@@ -25,75 +25,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	bookid, err := CreateWordBook("test", "test")
-
-	//エラー処理
-	if err != nil {
-		//パニックを起こす
-		log.Fatalln(err)
-	}
-
-	err = RegisterWord("test", bookid, database.Word{
-		Word:        "test",
-		Description: "test",
-		ID:          "aaa",
-	})
-
-	//エラー処理
-	if err != nil {
-		//パニックを起こす
-		log.Fatalln(err)
-	}
-
-	book, err := GetWordBook("test", bookid)
-
-	//エラー処理
-	if err != nil {
-		//パニックを起こす
-		log.Fatalln(err)
-	}
-
-	log.Println(book.Words)
-
-	books,err := GetWordBooksByUserID("test")
-
-	//エラー処理
-	if err != nil {
-		//パニックを起こす
-		log.Fatalln(err)
-	}
-
-	for _,book := range books {
-		log.Println(book.Name)
-		log.Println(book.ID)
-
-		log.Println(book.Words)
-	}
-	/*
-		//単語を生成
-		word, err := GenerateWord(database.Word{
-			Word:        "test",
-			Description: "test",
-			ID:          "aaa",
-		})
-
-		//エラー処理
-		if err != nil {
-			//パニックを起こす
-			log.Fatalln(err)
-		}
-
-		//単語を登録
-		err = RegisterWord("test", bookid, word)
-
-		//エラー処理
-		if err != nil {
-			//パニックを起こす
-			log.Fatalln(err)
-		}
-	*/
-
-	if false {
+	if true {
 		//ルーター
 		router := gin.Default()
 
@@ -124,10 +56,13 @@ func main() {
 
 		//単語帳api グループ
 		word_group := router.Group("/wordbook")
-		word_group.POST("/create", func(ctx *gin.Context) {
-			//作成するエンドポイント
 
+		word_group.POST("/create", func(ctx *gin.Context) {
+			//作成するエンドポイント (単語帳)
+			
 		})
+
+		
 
 		router.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
 	}
@@ -212,6 +147,28 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 	return wordbook, nil
 }
 
+//単語帳に登録されているかを返す
+func check_registerd(userid string,bookid string,wordid string) (bool,error) {
+	//単語帳を取得
+	wordbook,err := GetWordBook(userid,bookid)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return false, err
+	}
+
+	//登録されているか
+	for _,val := range wordbook.Words {
+		//一致するとき
+		if val.Wordid == wordid {
+			return true,nil
+		}
+	}
+
+	return false,nil
+}
+
 // 単語帳に単語を登録する
 func RegisterWord(userid string, bookid string, word database.Word) error {
 	//データベース接続を取得する
@@ -232,6 +189,22 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 		return err
 	}
 
+	//登録されているか
+	is_registered,err := check_registerd(userid,bookid,word.ID)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//登録されているとき
+	if is_registered {
+		log.Println("already registered")
+		//戻る
+		return nil
+	}
+
 	//追加する
 	add_data := append(wordbook.Words, database.WordData{
 		BookID: bookid,
@@ -241,12 +214,8 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 	//単語を追加
 	wordbook.Words = add_data
 
-	log.Println(add_data)
-
 	//更新
 	result := dbconn.Save(&wordbook)
-
-	log.Println(result.RowsAffected)
 
 	//エラー処理
 	if result.Error != nil {
@@ -331,7 +300,7 @@ func GetWord(word_str string) (database.Word, error) {
 	return word, nil
 }
 
-//ユーザーIDから単語帳を取得する
+// ユーザーIDから単語帳を取得する
 func GetWordBooksByUserID(userid string) ([]database.WordBook, error) {
 	//データベース接続を取得する
 	dbconn, err := database.GetDB()
