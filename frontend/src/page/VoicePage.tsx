@@ -13,7 +13,7 @@ const VoicePage = () => {
         <p>カテゴリー入力</p>
         <CategoryBox />
       </div>
-      <input type="text" id="record" className='flex relative mx-[10%] lg:mx-10 my-[5%] w-[80%] lg:w-[65%] h-[60%] lg:h-[50%] rounded-3xl shadow-inner'></input>
+      <input type="text" id="record" className='flex relative mx-[10%] lg:mx-10 my-[5%] w-[80%] lg:w-[65%] h-[60%] lg:h-[50%] rounded-3xl shadow-[inset_0px_6px_2px_rgba(0,4,4,0.25)]'></input>
       <div className='absolute -mt-16 lg:-mt-[15%] right-[6%] lg:right-0 lg:left-24'><VoiceBtn /></div> 
     </main>
     
