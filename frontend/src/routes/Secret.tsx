@@ -1,34 +1,30 @@
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Header from "../component/Header";
-import HomePage from "../page/HomePage";
-import { ContextWrapper } from "../context/ContextWrapper";
-import Footer from "../component/Footer";
 
-import { GetInfo, Refresh_Token } from "../auth/Auth";
+// コンポーネント
+import Header from "../component/Header";
+import Footer from "../component/Footer";
+// 画面
+import HomePage from "../page/HomePage";
+import NotFound from "../page/NotFound";
+import WordbookDetails from "../page/WordbookDetails";
+// コンテキスト
+import { ContextWrapper } from "../context/ContextWrapper";
 
 const Secret = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    // if (!GetInfo()) {
-    //   navigate("/LoginPage");
-    // }
-    Refresh_Token();
-    // const token = localStorage.getItem("token");
-    // if (token) {
-    //   navigate("/login");
-    // }
-  }, [navigate]);
   return (
     <>
       <ContextWrapper>
         <Header />
-        <Routes>
-          {/* <Route> */}
-          <Route path="/HomePage" element={<HomePage />} />
-          {/* </Route> */}
-        </Routes>
+        <main className="h-full overflow-y-auto	bg-mainBg bg-cover bg-fixed bg-bottom pb-[30px] lg:bg-mainBg_Lg">
+          <Routes>
+            {/* <Route> */}
+            <Route path="/HomePage" element={<HomePage />} />
+            <Route path="/WordbookDetails" element={<WordbookDetails />} />
+            <Route path="/*" element={<NotFound />} />
+            {/* </Route> */}
+          </Routes>
+        </main>
         <Footer />
       </ContextWrapper>
     </>
