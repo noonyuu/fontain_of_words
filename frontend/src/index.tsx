@@ -15,8 +15,8 @@ root.render(
     {/* <RoginPage /> ログインページ*/}
     {/* <NewAccountPage /> 新規登録*/}
     {/* <HomePage /> ホームページ */}
-    {/* <VoicePage /> */}
-    <App />
+    <VoicePage />
+    {/* <App /> */}
   </React.StrictMode>
 );
 

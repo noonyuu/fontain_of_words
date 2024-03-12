@@ -1,18 +1,22 @@
 // 録音ページ
 import React from 'react'
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
+import VoiceBtn from '../component/VoiceBtn';
+import CategoryBox from '../component/CategoryBox';
 
 const VoicePage = () => {
   return (
-    // <main className=' bg-voiceBg bg-bottom bg-cover h-dvh w-dvw bg-no-repeat'>
-    <main className='bg-voiceBg md:bg-voiceBg_md lg:bg-voiceBg_lg bg-cover bg-bottom h-dvh'>
+    <main className='bg-blue-300 h-dvh w-dvw'>
       <div className='bg-white w-dvw h-[51.97px] lg:h-[70px]'>header</div>
       <RiArrowGoBackFill className='size-5 m-4'/>
-      <div className='Kaisei Tokumin text-base'>
-        カテゴリー入力
-        <input type="text"></input>
+      <div className='Kaisei Tokumin text-base lg:text-lg mx-[10%] lg:mx-16 lg:ml-10 lg:mt-[10%] my-12 lg:float-left'>
+        <p>カテゴリー入力</p>
+        <CategoryBox />
       </div>
+      <input type="text" id="record" className='flex relative mx-[10%] lg:mx-10 my-[5%] w-[80%] lg:w-[65%] h-[60%] lg:h-[50%] rounded-3xl shadow-inner'></input>
+      <div className='absolute -mt-16 lg:-mt-[15%] right-[6%] lg:right-0 lg:left-24'><VoiceBtn /></div> 
     </main>
+    
   )
 }
 
