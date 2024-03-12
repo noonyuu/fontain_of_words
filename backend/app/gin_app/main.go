@@ -23,217 +23,335 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if true {
-		//ルーター
-		router := gin.Default()
+	//ルーター
+	router := gin.Default()
 
-		//認証用ミドルウェア
-		router.Use(AuthMiddleware())
+	//認証用ミドルウェア
+	router.Use(AuthMiddleware())
 
-		router.GET("/", func(ctx *gin.Context) {
-			//データ取得
-			user_data := ctx.MustGet("user")
-			success := ctx.MustGet("success")
+	router.GET("/", func(ctx *gin.Context) {
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
 
-			//認証されているか
-			if !success.(bool) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-				return
-			}
-
-			//キャスト
-			user := user_data.(*auth_grpc.User)
-			log.Println(user)
-
-			ctx.Redirect(http.StatusTemporaryRedirect, "/statics/index.html")
-		})
-
-		router.GET("/ping", func(ctx *gin.Context) {
-
-		})
-
-		//単語帳api グループ
-		word_group := router.Group("/wordbook")
-
-		type BookData struct {
-			Name string
-			ID   string
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
 		}
 
-		type Get_BookData struct {
-			Id   string //単語帳ID
-			Name string //単語帳名
+		//キャスト
+		user := user_data.(*auth_grpc.User)
+		log.Println(user)
 
-			Words []database.WordData
+		ctx.Redirect(http.StatusTemporaryRedirect, "/statics/index.html")
+	})
+
+	router.GET("/ping", func(ctx *gin.Context) {
+
+	})
+
+	//単語帳api グループ
+	word_group := router.Group("/wordbook")
+
+	type BookData struct {
+		Name string
+		ID   string
+	}
+
+	type WordData struct {
+		Word   string //単語
+		WordID string //単語ID
+	}
+
+	type Get_BookData struct {
+		Id   string //単語帳ID
+		Name string //単語帳名
+
+		Words []WordData
+	}
+
+	//単語帳を取得する エンドポイント
+	word_group.GET("/get_books", func(ctx *gin.Context) {
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
+
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
 		}
 
-		//単語帳を取得する エンドポイント
-		word_group.GET("/get_books", func(ctx *gin.Context) {
-			//データ取得
-			user_data := ctx.MustGet("user")
-			success := ctx.MustGet("success")
+		//キャスト
+		user := user_data.(*auth_grpc.User)
 
-			//認証されているか
-			if !success.(bool) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-				return
-			}
+		//単語帳を取得
+		books, err := GetWordBooksByUserID(user.UserID)
 
-			//キャスト
-			user := user_data.(*auth_grpc.User)
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": "Internal Server Error"})
+			return
+		}
 
-			//単語帳を取得
-			books, err := GetWordBooksByUserID(user.UserID)
+		//データ
+		datas := []Get_BookData{}
 
-			//エラー処理
-			if err != nil {
-				log.Println(err)
-				ctx.JSON(500, gin.H{"message": "Internal Server Error"})
-				return
-			}
+		//回す
+		for book := range books {
+			//追加するデータ
+			add_word_datas := []WordData{}
 
-			//データ
-			datas := []Get_BookData{}
-
-			//回す
-			for book := range books {
-				//追加する
-				datas = append(datas, Get_BookData{
-					Id:   books[book].ID,
-					Name: books[book].Name,
-
-					Words: books[book].Words,
-				})
-			}
-
-			//成功
-			ctx.JSON(200, gin.H{"books": datas})
-		})
-
-		word_group.GET("/get_book/:id", func(ctx *gin.Context) {
-			//単語帳を取得するエンドポイント (単語帳)
-
-			//データ取得
-			user_data := ctx.MustGet("user")
-			success := ctx.MustGet("success")
-
-			//認証されているか
-			if !success.(bool) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-				return
-			}
-
-			//キャスト
-			user := user_data.(*auth_grpc.User)
-
-			//クエリから取得
-			bookid := ctx.DefaultQuery("id", "")
-
-			//単語帳が存在するか
-			if bookid != "" {
-				ctx.JSON(500, gin.H{"message": "Book Not Found"})
-				return
-			}
-
-			//単語帳を取得
-			wordbook, err := GetWordBook(user.UserID, bookid)
-
-			//エラー処理
-			if err != nil {
-				log.Println(err)
-				ctx.JSON(500, gin.H{"message": err.Error()})
-				return
-			}
-
-			//単語ID一覧
-			result := []string{}
+			//単語一覧
+			words := books[book].Words
 
 			//単語を回す
-			for _, val := range wordbook.Words {
-				//単語IDを追加
-				result = append(result, val.Wordid)
+			for word := range words {
+				//単語を取得 IDから
+				word_data,err := GetWord_Byid(words[word].Wordid)
+
+				//エラー処理
+				if err != nil {
+					log.Println(err)
+					continue
+				}
+
+				//単語を追加
+				add_word_datas = append(add_word_datas, WordData{
+					Word:   word_data.Word,
+					WordID: words[word].Wordid,
+				})
 			}
+			//追加する
+			datas = append(datas, Get_BookData{
+				Id:   books[book].ID,
+				Name: books[book].Name,
 
-			//成功
-			ctx.JSON(200, gin.H{"words": result})
-		})
+				Words: add_word_datas,
+			})
 
-		word_group.POST("/delete", func(ctx *gin.Context) {
-			//削除するエンドポイント (単語帳)
-			var data BookData
-			//データ取得
-			if err := ctx.ShouldBindJSON(&data); err != nil {
-				log.Println(err)
-				//エラーを返す
-				ctx.JSON(500, gin.H{"message": err.Error()})
-				return
-			}
+		}
 
-			//データ取得
-			user_data := ctx.MustGet("user")
-			success := ctx.MustGet("success")
+		//成功
+		ctx.JSON(200, gin.H{"books": datas})
+	})
 
-			//認証されているか
-			if !success.(bool) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-				return
-			}
+	word_group.GET("/get_book/:id", func(ctx *gin.Context) {
+		//単語帳を取得するエンドポイント (単語帳)
 
-			//キャスト
-			user := user_data.(*auth_grpc.User)
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
 
-			//単語帳を作成
-			bookid, err := CreateWordBook(user.UserID, data.Name)
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
+
+		//キャスト
+		user := user_data.(*auth_grpc.User)
+
+		//クエリから取得
+		bookid := ctx.Param("id")
+
+		//単語帳が存在するか
+		if bookid == "" {
+			ctx.JSON(500, gin.H{"message": "Book Not Found"})
+			return
+		}
+
+		//単語帳を取得
+		wordbook, err := GetWordBook(user.UserID, bookid)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//単語ID一覧
+		result := []WordData{}
+
+		//単語を回す
+		for _, val := range wordbook.Words {
+			//単語取得
+			winfo,err := GetWord_Byid(val.Wordid)
 
 			//エラー処理
 			if err != nil {
 				log.Println(err)
-				ctx.JSON(500, gin.H{"message": err.Error()})
-				return
+				continue
 			}
 
-			//成功
-			ctx.JSON(200, gin.H{"bookid": bookid})
-		})
+			//単語IDを追加
+			result = append(result, WordData{
+				Word:   winfo.Word,
+				WordID: val.Wordid,
+			})
+		}
 
-		word_group.POST("/create", func(ctx *gin.Context) {
-			//作成するエンドポイント (単語帳)
-			var data BookData
-			//データ取得
-			if err := ctx.ShouldBindJSON(&data); err != nil {
-				log.Println(err)
-				//エラーを返す
-				ctx.JSON(500, gin.H{"message": err.Error()})
-				return
-			}
+		//成功
+		ctx.JSON(200, gin.H{"words": result})
+	})
 
-			//データ取得
-			user_data := ctx.MustGet("user")
-			success := ctx.MustGet("success")
+	word_group.POST("/delete", func(ctx *gin.Context) {
+		//削除するエンドポイント (単語帳)
+		var data BookData
+		//データ取得
+		if err := ctx.ShouldBindJSON(&data); err != nil {
+			log.Println(err)
+			//エラーを返す
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
 
-			//認証されているか
-			if !success.(bool) {
-				ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-				return
-			}
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
 
-			//キャスト
-			user := user_data.(*auth_grpc.User)
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
 
-			//単語帳を作成
-			bookid, err := CreateWordBook(user.UserID, data.Name)
+		//キャスト
+		user := user_data.(*auth_grpc.User)
 
-			//エラー処理
-			if err != nil {
-				log.Println(err)
-				ctx.JSON(500, gin.H{"message": err.Error()})
-				return
-			}
+		//単語帳を作成
+		err := DeleteWordBook(user.UserID, data.ID)
 
-			//成功
-			ctx.JSON(200, gin.H{"bookid": bookid})
-		})
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
 
-		router.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
+		//成功
+		ctx.JSON(200, gin.H{"message": "success"})
+	})
+
+	word_group.POST("/create", func(ctx *gin.Context) {
+		//作成するエンドポイント (単語帳)
+		var data BookData
+		//データ取得
+		if err := ctx.ShouldBindJSON(&data); err != nil {
+			log.Println(err)
+			//エラーを返す
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
+
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
+
+		//キャスト
+		user := user_data.(*auth_grpc.User)
+
+		//単語帳を作成
+		bookid, err := CreateWordBook(user.UserID, data.Name)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//成功
+		ctx.JSON(200, gin.H{"bookid": bookid})
+	})
+
+	type RegisterData struct {
+		Bookid string `json:"bookid"`
+		Word   string `json:"word"`
 	}
+	word_group.POST("/register", func(ctx *gin.Context) {
+		//作成するエンドポイント (単語帳)
+		var data RegisterData
+		//データ取得
+		if err := ctx.ShouldBindJSON(&data); err != nil {
+			log.Println(err)
+			//エラーを返す
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//データ取得
+		user_data := ctx.MustGet("user")
+		success := ctx.MustGet("success")
+
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
+
+		//キャスト
+		user := user_data.(*auth_grpc.User)
+
+		//単語ID生成
+		word_id, err := GenID()
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//単語を生成 (ある場合は生成)
+		gen_word, err := GenerateWord(database.Word{
+			ID:          word_id,
+			Word:        data.Word,
+			Description: "",
+		})
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//単語登録
+		err = RegisterWord(user.UserID, data.Bookid, gen_word)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		log.Println(gen_word)
+		
+		is_registered,err := check_registerd(user.UserID,data.Bookid,gen_word.ID)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		log.Println(is_registered)
+
+		//成功
+		ctx.JSON(200, gin.H{"message": "success"})
+	})
+
+	router.Run("0.0.0.0:8080") // listen and serve on 0.0.0.0:8080
 }

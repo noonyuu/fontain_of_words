@@ -77,7 +77,7 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 	var wordbook database.WordBook
 
 	//単語帳を取得
-	result := dbconn.Where("userid = ? AND id = ?", userid, bookid).Preload("Words").First(&wordbook)
+	result := dbconn.Where("userid = ? AND id = ?", userid, bookid).First(&wordbook)
 
 	//エラー処理
 	if result.Error != nil {
@@ -90,6 +90,15 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 
 //単語帳に登録されているかを返す
 func check_registerd(userid string,bookid string,wordid string) (bool,error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return false, err
+	}
+
 	//単語帳を取得
 	wordbook,err := GetWordBook(userid,bookid)
 
@@ -99,12 +108,14 @@ func check_registerd(userid string,bookid string,wordid string) (bool,error) {
 		return false, err
 	}
 
-	//登録されているか
-	for _,val := range wordbook.Words {
-		//一致するとき
-		if val.Wordid == wordid {
-			return true,nil
-		}
+	//検索
+	count := dbconn.Model(&wordbook).Where(database.WordData{
+		Wordid: wordid,
+		BookID: bookid,
+	}).Association("Words").Count()
+
+	if (count >= 1) {
+		return true,nil
 	}
 
 	return false,nil
@@ -146,24 +157,21 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 		return nil
 	}
 
-	//追加する
-	add_data := append(wordbook.Words, database.WordData{
+	//登録データ
+	register_data := database.WordData{
 		BookID: bookid,
 		Wordid: word.ID,
-	})
-
-	//単語を追加
-	wordbook.Words = add_data
-
-	//更新
-	result := dbconn.Save(&wordbook)
-
-	//エラー処理
-	if result.Error != nil {
-		log.Println(result.Error)
-		return result.Error
 	}
 
+	//追加
+	err = dbconn.Model(&wordbook).Association("Words").Append(&register_data)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	
 	return nil
 }
 
@@ -184,6 +192,7 @@ func GenerateWord(word database.Word) (database.Word, error) {
 	//エラー処理
 	if err == gorm.ErrRecordNotFound {
 		//存在しない時
+		log.Println("新規作成")
 
 		//新規作成する
 		result := dbconn.Create(&word)
@@ -241,6 +250,34 @@ func GetWord(word_str string) (database.Word, error) {
 	return word, nil
 }
 
+//単語IDから単語を取得する
+func GetWord_Byid(wordid string) (database.Word, error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return database.Word{}, err
+	}
+
+	//単語を取得
+	var word database.Word
+
+	//単語を取得
+	result := dbconn.Where(database.Word{
+		ID: wordid,
+	}).First(&word)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return database.Word{}, result.Error
+	}
+
+	return word, nil
+}
+
 // ユーザーIDから単語帳を取得する
 func GetWordBooksByUserID(userid string) ([]database.WordBook, error) {
 	//データベース接続を取得する
@@ -258,7 +295,7 @@ func GetWordBooksByUserID(userid string) ([]database.WordBook, error) {
 	//単語帳を取得
 	result := dbconn.Where(database.WordBook{
 		Userid: userid,
-	}).Find(&wordbooks)
+	}).Preload("Words").Find(&wordbooks)
 
 	//エラー処理
 	if result.Error != nil {
@@ -267,4 +304,31 @@ func GetWordBooksByUserID(userid string) ([]database.WordBook, error) {
 	}
 
 	return wordbooks, nil
+}
+
+
+
+func DeleteWordBook(userid string, bookid string) error {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//単語帳を削除
+	result := dbconn.Where(database.WordBook{
+		Userid: userid,
+		ID:     bookid,
+	}).Delete(&database.WordBook{})
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return result.Error
+	}
+
+	return nil
 }

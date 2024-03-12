@@ -10,7 +10,7 @@ type WordBook struct {
 	Userid string //単語帳の所有者id
 	Name   string //単語帳名
 
-	Words  []WordData `gorm:"foreignkey:Wordid;references:ID"` //単語
+	Words  []WordData `gorm:"foreignkey:BookID;references:ID"` //単語
 }
 
 type WordData struct {
