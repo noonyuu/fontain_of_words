@@ -7,7 +7,7 @@ interface Btnprops {
 
 const SiteBtn:React.FC<Btnprops> = ({text}) => {
   return (
-    <button className='rounded-[50px] bg-login Kaisei Tokumin h-[42px] w-[256px] text-[15px] lg:h-[66px] lg:w-[485px] lg:text-[24px]'>
+    <button className='rounded-3xl bg-login Kaisei Tokumin h-[42px] w-[256px] text-[15px] lg:h-[66px] lg:w-[485px] lg:text-[24px]'>
       {text}
     </button>
   )

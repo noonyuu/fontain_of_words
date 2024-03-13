@@ -23,3 +23,22 @@ html {
 #root {
   height: 100vh;
 }
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs >.ant-tabs-nav .ant-tabs-nav-list{
+  justify-content: space-between;
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs >.ant-tabs-nav .ant-tabs-nav-wrap {
+  flex-direction: column;
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs {
+  font-family: 'Kaisei Tokumin';
+}
+
+/* レスポンシブ設定 */
+@media screen and (min-width: 1024px) {
+  :where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs {
+    font-size: 24px;
+  }
+}
