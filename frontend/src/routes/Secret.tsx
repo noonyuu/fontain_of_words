@@ -10,7 +10,6 @@ import NotFound from "../page/NotFound";
 import WordbookDetails from "../page/WordbookDetails";
 // コンテキスト
 import { ContextWrapper } from "../context/ContextWrapper";
-import Footer from "../component/Footer";
 
 const Secret = () => {
   return (

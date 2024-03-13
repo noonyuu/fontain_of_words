@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
-import Footer from '../component/Footer'
 import HomeBtn from '../component/HomeBtn'
 import HomeBtn_circle from '../component/HomeBtn_circle'
 
