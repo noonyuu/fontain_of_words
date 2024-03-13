@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import parse from "html-react-parser";
 // icon
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { IoMdSearch } from "react-icons/io";
@@ -30,13 +31,17 @@ const WordbookDetails = () => {
     handleClick();
   };
 
+  const [r, setR] = useState("");
   const henkan = () => {
-    console.log("変換");
+    const text: string =
+      "もちろんです。||--Golang--||、||--別名Go--||は、||--Google--||によって||--開発--||された||--プログラミング言語--||です。||--2009年--||に||--公開--||され、||--システムプログラミング--||に適した||--静的型付け言語--||として||--設計--||されました。その||--主--||な||--特徴--||は||--以下--||の||--通り--||です。||--Go--||は、||--シンプル--||で読みやすい||--文法--||を持っており、||--C言語--||の||--よう--||な||--伝統的--||な||--構文--||に基づいていますが、||--冗長--||な||--要素--||を取り除いています。||--Go--||は||--ゴルーチン--||と呼ばれる||--軽量スレッド--||を||--使用--||し、||--チャネル--||を介して||--通信--||する||--こと--||で、||--並行処理--||を||--容易--||にします。||--Go--||は||--コンパイル速度--||が||--非常--||に速い||--こと--||で知られており、大||--規模--||な||--プロジェクト--||でも||--迅速--||な||--ビルド--||が||--可能--||です。||--自動メモリ管理--||を||--提供--||し、||--開発者--||が||--メモリリーク--||を||--心配--||する||--こと--||なく||--コード--||を書く||--こと--||ができます。||--Go--||には||--豊富--||な||--標準ライブラリ--||があり、||--ネットワーキング--||、||--暗号化--||、||--文字列処理--||など、||--多く--||の||--標準的--||な||--機能--||を||--提供--||しています。||--Go--||は||--静的型付け言語--||であり、||--型安全性--||が||--保証--||されている||--ため--||、||--実行時エラー--||よりも||--コンパイル時--||に||--多く--||の||--エラー--||を||--検出--||する||--こと--||ができます。||--Go--||の||--プログラム--||は、||--さまざま--||な||--オペレーティングシステム--||や||--アーキテクチャ--||で||--コンパイル--||して||--実行--||する||--こと--||ができます。||--Go--||には||--フォーマットツール--||（||--gofmt--||）、||--ドキュメントツール--||（||--godoc--||）、||--パッケージ管理--||（||--go--|| ||--get--||）など、||--効率的--||な||--開発--||を||--サポート--||する||--ツール--||が含まれています。||--Go--||は、特に||--ネットワークサーバー--||、||--データベース--||、||--分散システム--||、||--クラウドサービス--||などの||--分野--||で好んで||--使用--||されています。その||--効率性--||と||--シンプルさ--||から、||--多く--||の||--企業--||や||--オープンソースプロジェクト--||で||--採用--||されています。";
+    let result = text.replace(/\|\|--/g, "<span className='text-red-500'>");
+    result = result.replace(/--\|\|/g, "</span>");
+    setR(result);
   };
 
-  // const [openMenu, setOpenMenu] = useState(false);
-
   const handleClick = () => {
+    henkan();
     setSelected(!selected);
     setModal(!modal);
     console.log(modal);
@@ -45,13 +50,13 @@ const WordbookDetails = () => {
   return (
     <main className="h-full overflow-y-auto	bg-fixed bg-bottom pb-[30px] pt-16">
       <div
-        className={`${modal ? "bg-gray-50 opacity-50 lg:bg-white lg:opacity-100 h-full" : ""}`}
+        className={`${modal ? "h-full bg-gray-50 opacity-50 lg:bg-white lg:opacity-100" : ""}`}
       >
-        <div className="ml-4 mt-4 h-5">
+        <div className="ml-4 h-5 pt-4">
           {/* TODO:仮アイコン */}
           <BsArrowReturnLeft size={24} />
         </div>
-        <h2 className="relative mr-6 mt-4 flex h-10 w-24 items-center justify-center bg-main font-bold leading-4 text-white after:absolute after:-right-10 after:top-0 after:block after:h-10 after:border-[20px] after:border-r-[20px] after:border-solid after:border-main after:border-r-transparent">
+        <h2 className="relative mr-6 mt-8 flex h-10 w-24 items-center justify-center bg-main font-bold leading-4 text-white after:absolute after:-right-10 after:top-0 after:block after:h-10 after:border-[20px] after:border-r-[20px] after:border-solid after:border-main after:border-r-transparent">
           #IT
         </h2>
         <div className="lg:flex lg:h-[calc(100%-7.75rem)]">
@@ -94,18 +99,21 @@ const WordbookDetails = () => {
               </ul>
             </div>
           </div>
-          {/* 単語説明 */}
+          {/* ディスクトップ単語説明 */}
           <div
-            className={`${selected ? "mr-4 hidden w-3/5 rounded-[5rem] border-2 shadow-lg lg:inline-block" : "hidden"}`}
+            className={`${selected ? "mr-4 hidden h-full w-3/5 rounded-[3rem] border-2 shadow-lg lg:inline-block" : "hidden"}`}
           >
-            <div className="flex h-[10%] items-center justify-end rounded-t-[5rem] border-b-2 bg-main pr-8">
+            <div className="flex h-[10%] items-center justify-end rounded-t-[3rem] border-b-2 bg-main pr-8">
               <LiaTimesSolid size={32} onClick={handleClick} />
             </div>
-            <div className="rounded-b-[5rem]">
+            <div className="h-[70%] rounded-b-[3rem]">
               <div className="mt-3 text-center text-[3rem] underline">
                 {title}
               </div>
-              <div className="mx-10 mt-8 text-center text-2xl">{word}</div>
+              <div className="mx-10 mt-8 h-[95%] overflow-auto text-center text-2xl">
+                {parse(r)}
+                {parse(r)}
+              </div>
               <div className="mx-10 mt-4 flex text-2xl text-blue-300">
                 <FaLink color="gray" size={32} />
                 {link}
@@ -126,9 +134,12 @@ const WordbookDetails = () => {
         <div className="flex h-[10%] items-center justify-end rounded-t-[2rem] border-b-2 bg-main pr-8">
           <LiaTimesSolid size={32} onClick={handleClick} />
         </div>
-        <div className="rounded-b-[2rem]">
+        <div className="h-[60%] rounded-b-[2rem]">
           <div className="mt-3 text-center text-2xl underline">{title}</div>
-          <div className="text-1xl mx-10 mt-8 text-center">{word}</div>
+          <div className="text-1xl mx-6 mt-8 h-[95%] overflow-auto text-center">
+            {parse(r)}
+            {parse(r)}
+          </div>
           <div className="text-1xl mx-10 mt-4 flex text-blue-300">
             <FaLink color="gray" size={24} />
             {link}
