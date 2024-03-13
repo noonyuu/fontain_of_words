@@ -30,7 +30,7 @@ func main() {
 		user := user_data.(*auth_grpc.User)
 		log.Println(user)
 
-		ctx.Redirect(http.StatusTemporaryRedirect,"/statics/index.html")
+		ctx.Redirect(http.StatusTemporaryRedirect,"/")
 	})
 
 	router.GET("/ping", func(ctx *gin.Context) {
