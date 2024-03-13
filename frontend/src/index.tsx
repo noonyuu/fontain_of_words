@@ -21,9 +21,8 @@ root.render(
     {/* <HomePage /> ホームページ */}
     {/* <VoicePage /> 録音ページ */}
     {/* <UploadPage />　テキストアップロードページ */}
-    <SavePage />
-    {/* <TabBar /> */}
-    {/* <CategoryPage_category /> */}
+    <SavePage /> 結果保存ページ
+    {/* <CategoryPage_category /> 単語帳カテゴリーページ */}
     {/* <App /> */}
   </React.StrictMode>
 );
