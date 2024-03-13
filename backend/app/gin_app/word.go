@@ -88,6 +88,33 @@ func GetWordBook(userid string, bookid string) (database.WordBook, error) {
 	return wordbook, nil
 }
 
+
+// 単語帳を取得する (単語ロード済み)
+func GetWordBook_Preload(userid string, bookid string) (database.WordBook, error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return database.WordBook{}, err
+	}
+
+	//単語帳を取得
+	var wordbook database.WordBook
+
+	//単語帳を取得
+	result := dbconn.Where("userid = ? AND id = ?", userid, bookid).Preload("Words").First(&wordbook)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return database.WordBook{}, result.Error
+	}
+
+	return wordbook, nil
+}
+
 //単語帳に登録されているかを返す
 func check_registerd(userid string,bookid string,wordid string) (bool,error) {
 	//データベース接続を取得する
@@ -172,6 +199,57 @@ func RegisterWord(userid string, bookid string, word database.Word) error {
 		return err
 	}
 	
+	return nil
+}
+
+//単語帳から単語を削除する
+func UnregisterWord(userid string, bookid string, wordid string) error {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//単語帳を取得
+	wordbook, err := GetWordBook(userid, bookid)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//登録されているか
+	is_registered,err := check_registerd(userid,bookid,wordid)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//登録されていないとき
+	if !is_registered {
+		log.Println("not registered")
+		//戻る
+		return nil
+	}
+
+	//削除
+	err = dbconn.Model(&wordbook).Association("Words").Delete(&database.WordData{
+		BookID: bookid,
+		Wordid: wordid,
+	})
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
 

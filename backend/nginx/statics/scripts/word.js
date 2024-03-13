@@ -68,29 +68,6 @@ get_word_books.addEventListener("click", async (evt) => {
     }
 })
 
-async function RegisterWord(id,word) {
-    try {
-        //リクエスト送信
-        const req = await fetch(base_path + "app/wordbook/register", {
-            method: "POST",
-            body: JSON.stringify({
-                "bookid" : id,
-                "word" : word
-            })
-        })
-
-        //200の時
-        if (req.status == 200) {
-            console.log(await req.json());
-            return true
-        }
-    } catch (ex) {
-        //エラー
-        console.log(ex);
-    }
-
-    return false
-}
 
 const register_word_btn = document.getElementById("register_word");
 
@@ -118,6 +95,18 @@ delete_word_books.addEventListener("click", async (evt) => {
     }
 })
 
+//
+function* Get_Checked() {
+    for (const bookid of Object.keys(check_books)) {
+        if (check_books[bookid].checked) {
+            yield bookid;
+        }
+    }
+    return null;
+}
+
+
+//単語帳を削除する (成功したらtrueを返す)
 async function delete_word_book(bookid) {
     try {
         //単語帳削除
@@ -131,19 +120,123 @@ async function delete_word_book(bookid) {
 
         //200の時
         if (req.status == 200) {
-            console.log(await req.json())
+            console.log(await req.json());
+            return true;
         }
     } catch (ex) {
         //エラー
         console.log(ex);
     }
+    return false;
 }
 
-function* Get_Checked() {
-    for (const bookid of Object.keys(check_books)) {
-        if (check_books[bookid].checked) {
-            yield bookid;
+//登録されている単語を単語帳から取得する
+async function Get_Words(bookid) {
+    try {
+        //取得
+        const req = await fetch(base_path + "app/wordbook/get_book/" + bookid, {
+            method: "GET",
+        })
+
+        //200の時
+        if (req.status == 200) {
+            //データ
+            const res_data = await req.json();
+
+            //データを返す
+            return {
+                "success": true,
+                "data": res_data["words"]
+            };
         }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
     }
-    return null;
+
+    return {
+        "success": false,
+        "data": []
+    };
+}
+
+//単語帳一覧を取得する
+async function Get_Books() {
+    try {
+        //一覧取得
+        const req = await fetch(base_path + "app/wordbook/get_books", {
+            method: "GET",
+        })
+
+        //200の時
+        if (req.status == 200) {
+            //データ
+            const res_data = await req.json();
+
+            //データを返す
+            return {
+                "success": true,
+                "data": res_data["books"]
+            };
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    return {
+        "success": false,
+        "data": []
+    };
+}
+
+//単語を登録する (単語帳ID , 単語)
+async function RegisterWord(id, word) {
+    try {
+        //リクエスト送信
+        const req = await fetch(base_path + "app/wordbook/register", {
+            method: "POST",
+            body: JSON.stringify({
+                "bookid": id,
+                "word": word
+            })
+        })
+
+        //200の時
+        if (req.status == 200) {
+            console.log(await req.json());
+            return true;
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    return false
+}
+
+//単語を登録解除する (単語帳ID , 単語id)
+async function UnregisterWord(id, wordid) {
+    try {
+        //リクエスト送信
+        const req = await fetch(base_path + "app/wordbook/unregister", {
+            method: "POST",
+            body: JSON.stringify({
+                "bookid": id,
+                "wordid": wordid
+            })
+        })
+
+        //200の時
+        if (req.status == 200) {
+            console.log(await req.json());
+            return true
+        }
+
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    return false
 }
