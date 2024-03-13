@@ -16,15 +16,13 @@ const Secret = () => {
     <>
       <ContextWrapper>
         <Header />
-        <main className="h-full overflow-y-auto	bg-mainBg bg-cover bg-fixed bg-bottom pb-[30px] lg:bg-mainBg_Lg">
-          <Routes>
-            {/* <Route> */}
-            <Route path="/HomePage" element={<HomePage />} />
-            <Route path="/WordbookDetails" element={<WordbookDetails />} />
-            <Route path="/*" element={<NotFound />} />
-            {/* </Route> */}
-          </Routes>
-        </main>
+        <Routes>
+          {/* <Route> */}
+          <Route path="/HomePage" element={<HomePage />} />
+          <Route path="/WordbookDetails" element={<WordbookDetails />} />
+          <Route path="/*" element={<NotFound />} />
+          {/* </Route> */}
+        </Routes>
         <Footer />
       </ContextWrapper>
     </>
