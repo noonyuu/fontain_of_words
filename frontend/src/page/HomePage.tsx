@@ -2,8 +2,11 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import HomeBtn from "../component/HomeBtn";
 import HomeBtn_circle from "../component/HomeBtn_circle";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
+  const history = useNavigate();
+
   const { profileModal } = useContext(GlobalContext);
 
   return (
@@ -14,7 +17,10 @@ const HomePage = () => {
         言葉の泉
       </div>
       <div className="mt-28 flex items-center justify-center">
-        <div className="text-center drop-shadow-mainShadow">
+        <div
+          className="text-center drop-shadow-mainShadow"
+          onClick={() => history("../VoicePage")}
+        >
           <HomeBtn text="新規作成" />
         </div>
         <HomeBtn_circle position="translate-x-[6.7rem] lg:translate-x-[8.5rem] size-10 bg-[#C5FFF8]" />
