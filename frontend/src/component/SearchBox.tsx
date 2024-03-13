@@ -6,7 +6,7 @@ const SearchBox = () => {
   return (
     <div>
       <input type="text" id="category" placeholder={"検索"} className='float-left h-10px w-10px bg-gray-200 text-gray-700'></input>
-      <button className='bg-gray-200 text-gray-900 size-6'><IoSearch /></button>
+      <button className='bg-gray-200 text-gray-400 size-6'><IoSearch /></button>
     </div>
   )
 }

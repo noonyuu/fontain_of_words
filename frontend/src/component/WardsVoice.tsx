@@ -4,7 +4,7 @@ import BookMark from './BookMark'
 
 interface Btnprops {
     word: string
-  }
+}
 
 const Wards:React.FC<Btnprops> = ({word}) => {
   return (

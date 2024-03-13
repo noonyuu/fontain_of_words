@@ -1,7 +1,6 @@
 // テキストアップロードページ
 import React from 'react'
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
-import VoiceBtn from '../component/VoiceBtn';         // 録音ボタン
 import { MdOutlineFileUpload } from "react-icons/md"; // アップロードボタン
 import CategoryBox from '../component/CategoryBox';   // カテゴリー選択ボックス
 

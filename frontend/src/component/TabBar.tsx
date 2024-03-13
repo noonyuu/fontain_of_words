@@ -2,7 +2,7 @@
 import React from 'react'
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
-import Wards from './Wards';
+import WardsVoice from './WardsVoice';
 
 const onChange = (key: string) => {
     console.log(key);
@@ -17,12 +17,12 @@ const onChange = (key: string) => {
     {
       key: '2',
       label: '単語のみ',
-      children: <Wards word='auto word'/>,
+      children: <WardsVoice word='auto word'/>,
     },
     {
       key: '3',
       label: '検索履歴',
-      children: <Wards word='search word'/>,
+      children: <WardsVoice word='search word'/>,
     },
   ];
 

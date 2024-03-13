@@ -10,18 +10,20 @@ import HomePage from "./page/HomePage";
 import SavePage from "./page/SavePage";
 import UploadPage from "./page/UploadPage";
 import TabBar from "./component/TabBar";
+import CategoryPage_category from "./page/CategoryPage_category";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     {/* 呼び出すページ */}
-    {/* <RoginPage /> ログインページ*/}
-    {/* <NewAccountPage /> 新規登録*/}
+    {/* <RoginPage /> ログインページ */}
+    {/* <NewAccountPage /> 新規登録 */}
     {/* <HomePage /> ホームページ */}
-    {/* <VoicePage /> 録音ページ*/}
+    {/* <VoicePage /> 録音ページ */}
     {/* <UploadPage /> */}
-    <SavePage />
+    {/* <SavePage /> */}
     {/* <TabBar /> */}
+    <CategoryPage_category />
     {/* <App /> */}
   </React.StrictMode>
 );
