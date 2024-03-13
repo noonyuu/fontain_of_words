@@ -11,7 +11,7 @@ const LoginBtn: React.FC<Btnprops> = ({ name, icon, loginLink }) => {
   const handleClick = () => {
     // window.location.href = loginLink;
     window.location.href =
-      "https://localhost:8443/auth/" + loginLink + "?redirect_path=/app/";
+      "/auth/" + loginLink + "?redirect_path=/app/";
   };
 
   return (
