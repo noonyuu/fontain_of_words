@@ -7,6 +7,9 @@ import Btn from "./component/btn"; // test
 import App from "./App";
 import VoicePage from "./page/VoicePage";
 import HomePage from "./page/HomePage";
+import SavePage from "./page/SavePage";
+import UploadPage from "./page/UploadPage";
+import TabBar from "./component/TabBar";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
@@ -15,7 +18,10 @@ root.render(
     {/* <RoginPage /> ログインページ*/}
     {/* <NewAccountPage /> 新規登録*/}
     {/* <HomePage /> ホームページ */}
-    <VoicePage />
+    {/* <VoicePage /> 録音ページ*/}
+    {/* <UploadPage /> */}
+    <SavePage />
+    {/* <TabBar /> */}
     {/* <App /> */}
   </React.StrictMode>
 );
