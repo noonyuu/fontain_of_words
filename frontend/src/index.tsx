@@ -20,10 +20,10 @@ root.render(
     {/* <NewAccountPage /> 新規登録 */}
     {/* <HomePage /> ホームページ */}
     {/* <VoicePage /> 録音ページ */}
-    {/* <UploadPage /> */}
-    {/* <SavePage /> */}
+    {/* <UploadPage />　テキストアップロードページ */}
+    <SavePage />
     {/* <TabBar /> */}
-    <CategoryPage_category />
+    {/* <CategoryPage_category /> */}
     {/* <App /> */}
   </React.StrictMode>
 );

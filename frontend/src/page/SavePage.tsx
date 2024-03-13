@@ -10,7 +10,7 @@ const SavePage = () => {
       <div className='bg-blue-300 w-dvw h-[51.97px] lg:h-[70px]'>header</div>
       <RiArrowGoBackFill className='size-5 m-4'/>
       <div className='mr-5 ml-7 lg:mr-32 lg:ml-44'><TabBar/></div>
-      <div className='absolute bottom-8 right-8'>
+      <div className='absolute bottom-4 right-4 lg:bottom-8 lg:right-8'>
         <button><FaPlusSquare className='size-12 lg:size-16 text-mark' /></button>
       </div>
     </main>
