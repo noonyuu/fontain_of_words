@@ -18,10 +18,6 @@ const NewAccountPage = () => {
     console.log("login");
     navigate("/LoginPage");
   };
-  // 新規登録処理用関数
-  const handleLogin = async (name: string) => {
-    console.log(name);
-  };
 
   return (
     <>

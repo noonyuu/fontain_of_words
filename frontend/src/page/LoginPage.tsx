@@ -15,24 +15,7 @@ import { Refresh_Token, Logout, GetInfo } from "../auth/Auth";
 
 const LoginPage = () => {
   const history = useNavigate();
-  //  ログイン処理用関数
-  const Login = async (name: string, retryCount: number = 0) => {
-    try {
-      console.log("ログイン処理開始");
-      const response = await fetch("/auth/google?redirect_path=/app/", {});
-      // console.log(response);
-
-      // if (response.status === 200) {
-      //   console.log("ログイン成功");
-      //   history("/secret/HomePage");
-      // } else {
-      //   console.log("ログイン失敗");
-      // }
-    } catch (error) {
-      console.error("リクエストエラー:", error);
-    }
-  };
-
+  
   const register = () => {
     console.log("register");
     history("/NewAccountPage");
@@ -46,7 +29,7 @@ const LoginPage = () => {
   return (
     <>
       <main>
-        <div className="Kaisei Tokumin mt-[44px] text-center text-5xl text-login lg:ml-[40px] lg:text-left">
+        <div className="Kaisei Tokumin mt-[44px] text-center text-5xl text-login lg:ml-[40px] lg:text-left pb-[25px]">
           言葉の泉
         </div>
         <div className="Kaisei Tokumin my-[40px] text-center text-[32px] lg:my-[20px]">
@@ -76,9 +59,6 @@ const LoginPage = () => {
         </div>
         <button onClick={a}>ろぐいん</button>
       </main>
-      <footer className="absolute bottom-0 h-[25px] w-dvw">
-        <Footer />
-      </footer>
     </>
   );
 };
