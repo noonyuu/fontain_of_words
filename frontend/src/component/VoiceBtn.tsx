@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // コンテキスト
 import { GlobalContext } from "../context/GlobalContext";
 
-import { Init } from "../connections/Voice";
+import { Init, Start ,Stop } from "../connections/Voice";
 
 interface Btnprops {
   voice: boolean;
@@ -42,7 +42,9 @@ const VoiceBtn = () => {
   // 録音
   const Record = () => {
     // console.log("録音中");
+    Init();
     console.log("録音開始");
+    Start();
     console.log("openModal", openModal);
     if (!openModal) {
       setRecord(true);
@@ -54,17 +56,18 @@ const VoiceBtn = () => {
   };
 
   const NowCancel = () => {
+    // Stop();
     setOpenModal(false);
     setRecord(false);
   };
 
   const DownCancel = () => {
+    Stop();
     setOpenModal(false);
     setRecord(false);
   };
 
   useEffect(() => {
-    Init();
     console.log("open updated:", openModal);
   }, [record, openModal]);
 

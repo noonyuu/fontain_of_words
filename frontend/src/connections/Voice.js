@@ -28,6 +28,12 @@ export const connect_ws = () => {
   wsconn.onmessage = function (event) {
     const result = JSON.parse(event.data)["result"];
 
+    if (result) {
+      let value = localStorage.getItem("recode");
+      value = value ? value + result : result;
+      localStorage.setItem("recode", value);
+    }
+
     // kaiseki_result?.insertAdjacentHTML("beforeend", result + "<br>");
   };
 
@@ -99,6 +105,7 @@ export const Init = () => {
 export const Start = () => {
   //接続済みなら音声認識開始
   if (is_connected) {
+    console.log("start");
     is_restart = true;
     vr_function();
   }
@@ -107,6 +114,7 @@ export const Start = () => {
 export const Stop = () => {
   //接続済みなら音声認識停止
   is_restart = false;
+  console.log("stop");
 
   //音声認識停止
   recognition?.stop();
