@@ -41,4 +41,13 @@ async function main() {
     console.log(await Refresh_Token());
 }
 
+const txt_upload = document.getElementById("txt_upload");
+
+txt_upload.addEventListener("change", async (evt) => {
+    for (let result of await uptext(txt_upload.files[0])) {
+        kaiseki_result.insertAdjacentHTML("beforeend", result + "<br>");
+    }
+})
+
+
 main();

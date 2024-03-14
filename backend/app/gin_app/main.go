@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"gin_app/auth_grpc"
 	"gin_app/database"
+	"os"
+	"path/filepath"
 
 	"log"
 	"net/http"
@@ -455,6 +458,102 @@ func main() {
 
 		//成功
 		ctx.JSON(200, gin.H{"description": word.Description})
+	})
+
+	router.POST("/uptext", func(ctx *gin.Context) {
+		//データ取得
+		success := ctx.MustGet("success")
+
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
+
+		//ファイル取得
+		file,err := ctx.FormFile("file")
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//IDを生成
+		uid,err := GenID()
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//ファイル保存
+		savepath := filepath.Join("./texts",uid + ".txt")	
+
+		//ファイル保存
+		err = ctx.SaveUploadedFile(file, savepath)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//テキストを取得
+		tfile,err := os.Open(savepath)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//テキストを取得
+		scanner := bufio.NewScanner(tfile)
+
+		total_result := []string{}
+		//テキストを取得
+		for scanner.Scan() {
+			//テキストを取得
+			text := scanner.Text()
+
+			//テキスト解析
+			total_result = append(total_result,parse_sentence(text))
+		}
+
+		//エラー処理
+		if err = scanner.Err(); err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//ファイルを閉じる
+		err = tfile.Close()
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		//ファイルを削除
+		err = os.Remove(savepath)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"result": total_result})
 	})
 
 	type TextData struct {

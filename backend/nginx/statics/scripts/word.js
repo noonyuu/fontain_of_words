@@ -240,3 +240,39 @@ async function UnregisterWord(id, wordid) {
 
     return false
 }
+
+//テキストファイルをアップロードする
+async function uptext(file) {
+    let results_list = [];
+    try {
+        //フォームデータ
+        const fdata = new FormData();
+
+        //ファイルを追加
+        fdata.append("file", file);
+
+        //ポスト
+        const req = await fetch(base_path + "app/uptext", {
+            method: "POST",
+            body: fdata
+        });
+
+        //200の時
+        if (req.status == 200) {
+            //jsonで取得
+            const results = await req.json();
+
+            //リストを回す
+            for (const result of results["result"]) {
+                //結果に追加
+                results_list.push(result);
+            }
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    //結果を返す
+    return results_list;
+}
