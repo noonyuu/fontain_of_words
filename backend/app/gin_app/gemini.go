@@ -19,8 +19,9 @@ var (
 )
 
 type Question struct {
-	id   string
-	text string
+	id     string
+	text   string
+	isfake bool
 }
 
 func Gemini_Init() {
@@ -48,37 +49,41 @@ func Gemini_Init() {
 
 	models = append(models, model)
 
-	go func ()  {
+	go func() {
 		for {
 			// Dequeue
 			front := queue.Front()
 
-			log.Println(front)
-
+			//キューから取得
 			if front == nil {
 				time.Sleep(time.Millisecond * 500)
 				continue
 			}
 
-			question_data := front.Value.(Question)
-
-			go func ()  {
-				ai_txt,err := QueAi(question_data.text)	
-
-				if err != nil {
-					log.Println(err)
-					return
-				}
-
-				log.Println(ai_txt)
-			}()
 			// This frees up memory and prevents memory leaks.
 			queue.Remove(front)
+
+			// キューから取得
+			question_data := front.Value.(Question)
+
+			//偽物の場合戻る
+			if (question_data.isfake) {
+				time.Sleep(time.Millisecond * 500)
+				continue
+			}
+
+			go func() {
+				//ID取得
+				question_id := question_data.id
+
+				//AIに聞く
+				CallAI(question_id, question_data.text)
+			}()
 
 			// Sleep
 			time.Sleep(time.Millisecond * 500)
 		}
-	} ()
+	}()
 }
 
 func QueAi(text string) (string, error) {
@@ -132,9 +137,35 @@ func Get_text(resp *genai.GenerateContentResponse) string {
 	return result_txt
 }
 
-func PushText(id string,text string) {
+func PushText(id string, text string) {
 	queue.PushBack(Question{
 		id:   id,
 		text: text,
+		isfake: false,
 	})
+}
+
+// AIに聞く
+func CallAI(id string, text string) (string, error) {
+	//AI生成
+	ai_txt, err := QueAi(text)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//単語更新
+	err = UpdateWord(id, ai_txt)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	return ai_txt, nil
+}
+
+func Count_Que() int {
+	return queue.Len()
 }

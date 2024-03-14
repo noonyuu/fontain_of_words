@@ -410,3 +410,38 @@ func DeleteWordBook(userid string, bookid string) error {
 
 	return nil
 }
+
+//単語更新
+func UpdateWord(wordid string,description string) error {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//単語を取得
+	word,err := GetWord_Byid(wordid)
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	//意味更新
+	word.Description = description
+
+	//更新
+	result := dbconn.Save(&word)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return result.Error
+	}
+
+	return nil
+}

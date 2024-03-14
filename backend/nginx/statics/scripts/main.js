@@ -55,12 +55,13 @@ async function queai() {
         const req = await fetch(base_path + "app/ai", {
             method: "POST",
             body: JSON.stringify({
-                "Text" : "魑魅魍魎"
+                "Text" : "タンタンメン"
             }),
         });
 
         //200の時
         if (req.status == 200) {
+            console.log(await req.json());
             return true;
         }
 

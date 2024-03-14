@@ -647,9 +647,32 @@ func main() {
 			return
 		}
 
+		//説明文を取得
+		if word_data.Description != "" {
+			ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : word_data.Description})
+			return
+		}
+
+		//説明文を取得
 		PushText(word_data.ID,word_data.Word)
 
-		ctx.JSON(200, gin.H{"result": "ok"})
+		//キューのカウントが多い場合
+		if (Count_Que() > 10) {
+			ctx.JSON(200, gin.H{"result": "","status":"wait","message" : "many que","count":Count_Que()})
+			return
+		}
+
+		//キューが少ない場合聞いてみる
+		result,err := CallAI(word_data.ID,word_data.Word)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : result})
 	})
 
 	//WebSocket
