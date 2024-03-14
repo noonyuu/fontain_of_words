@@ -18,7 +18,7 @@ const Router = () => {
       // console.log(token);
       if (token) {
         console.log("token");
-        console.log(token);
+        const to = token;
         navigate("/secret/HomePage");
       } else {
         navigate("/LoginPage");
