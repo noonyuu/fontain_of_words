@@ -361,6 +361,7 @@ func main() {
 			ID:          word_id,
 			Word:        data.Word,
 			Description: "",
+			IsSearching: false,
 		})
 
 		//エラー処理
@@ -629,6 +630,7 @@ func main() {
 				ID:          word_id,
 				Word:        data.Text,
 				Description: "",
+				IsSearching: false,
 			})
 
 			//設定
@@ -650,6 +652,12 @@ func main() {
 		//説明文を取得
 		if word_data.Description != "" {
 			ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : word_data.Description})
+			return
+		}
+
+		//検索中なら戻る
+		if word_data.IsSearching {
+			ctx.JSON(200, gin.H{"result": "","status":"failed","Sear" : "searching","count":Count_Que()})
 			return
 		}
 

@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"context"
 	"fmt"
+	"gin_app/database"
 	"log"
 	"os"
 	"time"
@@ -49,6 +50,8 @@ func Gemini_Init() {
 
 	models = append(models, model)
 
+	milli_time := time.Millisecond * 10000
+
 	go func() {
 		for {
 			// Dequeue
@@ -56,7 +59,7 @@ func Gemini_Init() {
 
 			//キューから取得
 			if front == nil {
-				time.Sleep(time.Millisecond * 500)
+				time.Sleep(milli_time)
 				continue
 			}
 
@@ -68,7 +71,7 @@ func Gemini_Init() {
 
 			//偽物の場合戻る
 			if (question_data.isfake) {
-				time.Sleep(time.Millisecond * 500)
+				time.Sleep(milli_time)
 				continue
 			}
 
@@ -81,7 +84,7 @@ func Gemini_Init() {
 			}()
 
 			// Sleep
-			time.Sleep(time.Millisecond * 500)
+			time.Sleep(milli_time)
 		}
 	}()
 }
@@ -147,6 +150,35 @@ func PushText(id string, text string) {
 
 // AIに聞く
 func CallAI(id string, text string) (string, error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//単語取得
+	word_data ,err := GetWord_Byid(id)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//検索中にする
+	word_data.IsSearching = true
+
+	//更新
+	result := dbconn.Save(&word_data)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return "", nil
+	}
+
 	//AI生成
 	ai_txt, err := QueAi(text)
 

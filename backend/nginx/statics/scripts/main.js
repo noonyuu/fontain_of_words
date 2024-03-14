@@ -49,13 +49,13 @@ txt_upload.addEventListener("change", async (evt) => {
     }
 })
 
-async function queai() {
+async function queai(text) {
     try {
         //トークン更新
         const req = await fetch(base_path + "app/ai", {
             method: "POST",
             body: JSON.stringify({
-                "Text" : "タンタンメン"
+                "Text" : text
             }),
         });
 
@@ -74,6 +74,14 @@ async function queai() {
     }
 }
 
-queai();
+const ai_word = document.getElementById("ai_word");
+
+ai_word.addEventListener("click", async (evt) => {
+    evt.preventDefault();
+
+    const result = await queai(input_word.value);
+
+    console.log(result);
+})
 
 main();
