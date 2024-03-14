@@ -11,6 +11,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 
 	"github.com/gorilla/websocket"
 )
@@ -21,10 +23,38 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
+// .envを呼び出します。
+func loadEnv() {
+	// ここで.envファイル全体を読み込みます。
+	// この読み込み処理がないと、個々の環境変数が取得出来ません。
+	// 読み込めなかったら err にエラーが入ります。
+	err := godotenv.Load(".env")
+
+	// もし err がnilではないなら、"読み込み出来ませんでした"が出力されます。
+	if err != nil {
+		log.Panicln("読み込み出来ませんでした: %v", err)
+	}
+}
+
 func main() {
+	loadEnv()
+
+	//フォルダを削除する
+	if err := os.Remove("texts"); err != nil {
+        log.Println(err)
+    }
+
+	//フォルダを作成する
+	if err := os.Mkdir("texts", 0777); err != nil {
+        log.Fatalln(err)
+    }
+
 	Init()
 	//パーサー初期化
 	parser_init()
+
+	//AI初期化
+	Gemini_Init()
 
 	//データベース初期化
 	database.DBPATH = "./Datas.db"
@@ -560,7 +590,6 @@ func main() {
 		Text string //テキスト
 	}
 
-	/*
 	router.POST("/ai", func(ctx *gin.Context) {
 		//データ取得
 		success := ctx.MustGet("success")
@@ -618,10 +647,10 @@ func main() {
 			return
 		}
 
-		
-		//word_data.ID
+		PushText(word_data.ID,word_data.Word)
+
+		ctx.JSON(200, gin.H{"result": "ok"})
 	})
-	*/
 
 	//WebSocket
 	router.GET("/ws", func(ctx *gin.Context) {
