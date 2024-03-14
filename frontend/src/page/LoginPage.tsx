@@ -11,11 +11,11 @@ import { SiGithub } from "react-icons/si"; // GitHub
 import { FaLine } from "react-icons/fa"; // Line
 import { IoLogoMicrosoft } from "react-icons/io5"; // Microsoft
 
-import { Refresh_Token, Logout, GetInfo } from "../auth/Auth";
+import { Refresh_Token, Logout, GetInfo } from "../connections/Auth";
 
 const LoginPage = () => {
   const history = useNavigate();
-  
+
   const register = () => {
     console.log("register");
     history("/NewAccountPage");
@@ -29,7 +29,7 @@ const LoginPage = () => {
   return (
     <>
       <main>
-        <div className="Kaisei Tokumin mt-[44px] text-center text-5xl text-login lg:ml-[40px] lg:text-left pb-[25px]">
+        <div className="Kaisei Tokumin mt-[44px] pb-[25px] text-center text-5xl text-login lg:ml-[40px] lg:text-left">
           言葉の泉
         </div>
         <div className="Kaisei Tokumin my-[40px] text-center text-[32px] lg:my-[20px]">
