@@ -3,12 +3,14 @@ import React from 'react'
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
 import { MdOutlineFileUpload } from "react-icons/md"; // アップロードボタン
 import CategoryBox from '../component/CategoryBox';   // カテゴリー選択ボックス
+import { useNavigate } from 'react-router-dom';
 
 const UploadPage = () => {
+  const history = useNavigate();
   return (
     <main className='bg-blue-300 h-dvh w-dvw'>
       <div className='bg-white w-dvw h-[51.97px] lg:h-[70px]'>header</div>
-      <RiArrowGoBackFill className='size-5 lg:size-8 m-4'/>
+      <RiArrowGoBackFill className='size-5 lg:size-8 m-4' onClick={() => history(-1)}/>
       <div className='Kaisei Tokumin text-base lg:text-lg mx-[10%] lg:mx-16 lg:ml-10 lg:mt-[10%] my-12 lg:float-left'>
         <p>カテゴリー入力</p>
         <CategoryBox elseCategory={false}/>
