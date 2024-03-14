@@ -1,14 +1,14 @@
-var flag_speech = 0;
+let flag_speech = 0;
 let total_txt = "";
 let is_connected = false;
-const kaiseki_result = document.getElementById("kaiseki_result");
+let kaiseki_result = null;
 let wsconn = null;
 let is_first = false;
 let is_restart = true;
 let recognition = null;
 const ws_url = "wss://localhost:8443/app/ws";
 
-export const connect_ws=()=> {
+export const connect_ws = () => {
   //接続
   wsconn = new WebSocket(ws_url);
 
@@ -28,7 +28,7 @@ export const connect_ws=()=> {
   wsconn.onmessage = function (event) {
     const result = JSON.parse(event.data)["result"];
 
-    //kaiseki_result.insertAdjacentHTML("beforeend", result + "<br>");
+    // kaiseki_result?.insertAdjacentHTML("beforeend", result + "<br>");
   };
 
   //閉じられたとき再接続する
@@ -38,12 +38,12 @@ export const connect_ws=()=> {
 
     connect_ws();
   };
-}
+};
 
 export const vr_function = () => {
-  window.SpeechRecognition =
-    window.SpeechRecognition || webkitSpeechRecognition;
-  recognition = new webkitSpeechRecognition();
+  let SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
   recognition.lang = "ja";
   recognition.interimResults = true;
   recognition.continuous = true;
@@ -51,7 +51,7 @@ export const vr_function = () => {
   recognition.onsoundstart = function () {};
   recognition.onnomatch = function () {};
   recognition.onerror = function () {
-    if (flag_speech == 0) {
+    if (flag_speech === 0) {
       //再起する状態なら
       if (is_restart) {
         vr_function();
@@ -68,11 +68,10 @@ export const vr_function = () => {
     var results = event.results;
 
     if (results[0].isFinal) {
-      //document.getElementById('result_text').innerHTML = results[0][0].transcript;
       total_txt += results[0][0].transcript;
 
       //テキストを送信
-      wsconn.send(
+      wsconn?.send(
         JSON.stringify({
           Text: results[0][0].transcript,
         }),
@@ -83,23 +82,19 @@ export const vr_function = () => {
         vr_function();
       }
     } else {
-      //途中結果表示
-      //console.log(total_txt + results[0][0].transcript);
-      // document.getElementById('result_text').innerHTML = total_txt + results[0][0].transcript;
-      // document.getElementById('result_text').scrollTop = document.getElementById('result_text').scrollHeight;
       flag_speech = 1;
     }
   };
   flag_speech = 0;
-  document.getElementById("status").innerHTML = "start";
+  const status = document.getElementById("status");
+  if (status) status.innerHTML = "start";
   recognition.start();
-}
+};
 
-export const Init = () =>{
-  console.log("init");
+export const Init = () => {
   //Websocket に接続
   connect_ws();
-}
+};
 
 export const Start = () => {
   //接続済みなら音声認識開始
@@ -107,14 +102,14 @@ export const Start = () => {
     is_restart = true;
     vr_function();
   }
-}
+};
 
-export const Stop = () =>{
-  //接続済みなら音声認識開始
+export const Stop = () => {
+  //接続済みなら音声認識停止
   is_restart = false;
 
   //音声認識停止
-  recognition.stop();
-}
+  recognition?.stop();
+};
 
 Init();

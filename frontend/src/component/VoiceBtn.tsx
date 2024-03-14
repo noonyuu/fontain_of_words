@@ -56,7 +56,6 @@ const VoiceBtn = () => {
   const NowCancel = () => {
     setOpenModal(false);
     setRecord(false);
-    Init();
   };
 
   const DownCancel = () => {
@@ -65,6 +64,7 @@ const VoiceBtn = () => {
   };
 
   useEffect(() => {
+    Init();
     console.log("open updated:", openModal);
   }, [record, openModal]);
 
