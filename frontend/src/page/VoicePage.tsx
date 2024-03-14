@@ -5,8 +5,10 @@ import parse from "html-react-parser";
 import { RiArrowGoBackFill } from "react-icons/ri"; // 戻るボタン
 import VoiceBtn from "../component/VoiceBtn"; // 録音ボタン
 import CategoryBox from "../component/CategoryBox"; // カテゴリー選択ボックス
+import { useNavigate } from "react-router-dom";
 
 const VoicePage = () => {
+  const history = useNavigate();
   const [record, setRecord] = useState(false);
 
   const [r, setR] = useState("");
@@ -27,9 +29,12 @@ const VoicePage = () => {
 
   return (
     <main className="h-dvh w-dvw  overflow-y-auto bg-blue-300 pt-16">
-      <RiArrowGoBackFill className="m-4 size-5 lg:size-8" />
+      <RiArrowGoBackFill
+        className="m-4 size-5 lg:size-8"
+        onClick={() => history(-1)}
+      />
       <div className="Kaisei Tokumin mx-[10%] my-6 text-base lg:float-left lg:mx-16 lg:ml-10 lg:mt-[10%] lg:text-lg">
-        <p>カテゴリー入力</p>
+        <p className="mb-2">カテゴリー入力</p>
         <CategoryBox elseCategory={false} />
       </div>
       <div
@@ -43,7 +48,7 @@ const VoicePage = () => {
         </div>
       </div>
       <div
-        className="absolute bottom-[5%] right-[6%] -mt-16 lg:bottom-1/2 lg:left-24 lg:right-0 lg:-mt-[15%]"
+        className="absolute bottom-[5%] right-[6%] -mt-16 w-20 lg:bottom-1/2 lg:left-24 lg:right-0 lg:-mt-[15%]"
         onClick={Recording}
       >
         <VoiceBtn voice={record} />
