@@ -55,8 +55,8 @@ func parse_sentence(base_txt string) string {
 
 				add_str := ""
 				if is_first {
-					//add_str += `||--`
-					add_str += `<span style="color: red; ">`
+					add_str += `||--`
+					//add_str += `<span style="color: red; ">`
 					is_first = false
 				}
 
@@ -70,8 +70,8 @@ func parse_sentence(base_txt string) string {
 		} else {
 			if !is_first {
 				is_first = true
-				//result_txt += "--||"
-				result_txt += "</span>"
+				result_txt += "--||"
+				//result_txt += "</span>"
 			}
 		}
 	}

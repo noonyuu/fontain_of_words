@@ -49,5 +49,30 @@ txt_upload.addEventListener("change", async (evt) => {
     }
 })
 
+async function queai() {
+    try {
+        //トークン更新
+        const req = await fetch(base_path + "app/ai", {
+            method: "POST",
+            body: JSON.stringify({
+                "Text" : "魑魅魍魎"
+            }),
+        });
+
+        //200の時
+        if (req.status == 200) {
+            return true;
+        }
+
+        //それ以外の時
+        return false;
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+        return false;
+    }
+}
+
+queai();
 
 main();
