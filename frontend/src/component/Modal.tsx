@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+
 // コンテキスト
 import { GlobalContext } from "../context/GlobalContext";
 
@@ -6,10 +7,11 @@ interface Btnprops {
   title: string;
   word1: string;
   word2: string;
-  func: () => void;
+  now: () => void;
+  down: () => void;
 }
 
-const Modal: React.FC<Btnprops> = ({ title, word1, word2, func }) => {
+const Modal: React.FC<Btnprops> = ({ title, word1, word2, now, down  }) => {
   const { openModal, record, setRecord, setOpenModal } =
     useContext(GlobalContext);
 
@@ -20,11 +22,9 @@ const Modal: React.FC<Btnprops> = ({ title, word1, word2, func }) => {
 
   const ClickWord1 = (word: string) => {
     if (word === word2) {
-      func();
+      now();
     } else {
-      setOpenModal(false);
-      console.log("reccooooood", record);
-      setRecord(record);
+      down();
     }
   };
 

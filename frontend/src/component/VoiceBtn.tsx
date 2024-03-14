@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 // コンテキスト
 import { GlobalContext } from "../context/GlobalContext";
 
+import { Init } from "../connections/Voice";
+
 interface Btnprops {
   voice: boolean;
 }
@@ -51,6 +53,17 @@ const VoiceBtn = () => {
     }
   };
 
+  const NowCancel = () => {
+    setOpenModal(false);
+    setRecord(false);
+    Init();
+  };
+
+  const DownCancel = () => {
+    setOpenModal(false);
+    setRecord(false);
+  };
+
   useEffect(() => {
     console.log("open updated:", openModal);
   }, [record, openModal]);
@@ -63,10 +76,17 @@ const VoiceBtn = () => {
             title="開始・継続しますか？"
             word1="いいえ"
             word2="はい"
-            func={Record}
+            now={Record}
+            down={NowCancel}
           />
         ) : (
-          <Modal title="どうしますか？" word1="停止" word2="保存" func={Save} />
+          <Modal
+            title="どうしますか？"
+            word1="停止"
+            word2="保存"
+            now={Save}
+            down={DownCancel}
+          />
         )}
       </div>
       <div className="flex justify-end pr-[5%] lg:justify-start lg:pl-[5%]">
