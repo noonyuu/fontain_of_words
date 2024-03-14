@@ -3,7 +3,6 @@ package main
 import (
 	"gin_app/auth_grpc"
 	"gin_app/database"
-	"strings"
 
 	"log"
 	"net/http"
@@ -11,9 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/gorilla/websocket"
-
-	"github.com/ikawaha/kagome-dict/ipa"
-	"github.com/ikawaha/kagome/v2/tokenizer"
 )
 
 var upgrader = websocket.Upgrader{
@@ -24,16 +20,12 @@ var upgrader = websocket.Upgrader{
 
 func main() {
 	Init()
-
-	//tokenizer
-	tokennn, err := tokenizer.New(ipa.Dict(), tokenizer.OmitBosEos())
-	if err != nil {
-		panic(err)
-	}
+	//パーサー初期化
+	parser_init()
 
 	//データベース初期化
 	database.DBPATH = "./Datas.db"
-	err = database.Init()
+	err := database.Init()
 
 	//エラー処理
 	if err != nil {
@@ -466,8 +458,71 @@ func main() {
 	})
 
 	type TextData struct {
-		Text string	//テキスト
+		Text string //テキスト
 	}
+
+	/*
+	router.POST("/ai", func(ctx *gin.Context) {
+		//データ取得
+		success := ctx.MustGet("success")
+
+		//認証されているか
+		if !success.(bool) {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			return
+		}
+
+		var data TextData
+		//データ取得
+		if err := ctx.ShouldBindJSON(&data); err != nil {
+			log.Println(err)
+			//エラーを返す
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		word_data, err := GetWord(data.Text)
+
+		if err == gorm.ErrRecordNotFound {
+			//存在しない時
+			log.Println("新規作成")
+			//単語ID生成
+			word_id, err := GenID()
+
+			//エラー処理
+			if err != nil {
+				log.Println(err)
+				ctx.JSON(500, gin.H{"message": err.Error()})
+				return
+			}
+
+			//単語を生成 (ない場合は生成)
+			gen_word, err := GenerateWord(database.Word{
+				ID:          word_id,
+				Word:        data.Text,
+				Description: "",
+			})
+
+			//設定
+			word_data = gen_word
+
+			//エラー処理
+			if err != nil {
+				log.Println(err)
+				ctx.JSON(500, gin.H{"message": err.Error()})
+				return
+			}
+			
+		} else if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		
+		//word_data.ID
+	})
+	*/
 
 	//WebSocket
 	router.GET("/ws", func(ctx *gin.Context) {
@@ -492,7 +547,7 @@ func main() {
 		}
 
 		log.Println(user.UserID)
-		
+
 		//テキスト
 		txtData := TextData{}
 
@@ -507,17 +562,20 @@ func main() {
 				//エラー処理
 				if err != nil {
 					log.Println(err)
-					return
+					break
 				}
 
 				log.Println(txtData.Text)
-			
-				tokens := tokennn.Tokenize(txtData.Text)
 
-				for _, token := range tokens {
-					
-					features := strings.Join(token.Features(), ",")
-					log.Printf("%s\t%v\t%v\n", token.Surface, features,token.Index)
+				//結果を書き込む
+				err = wsconn.WriteJSON(map[string]string{
+					"result": parse_sentence(txtData.Text),
+				})
+
+				//エラー処理
+				if err != nil {
+					log.Println(err)
+					break
 				}
 			}
 		}()
