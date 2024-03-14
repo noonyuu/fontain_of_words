@@ -20,10 +20,35 @@
         <a href="#" id="refresh_button" class="a_button">トークン更新</a>
         <a href="#" class="a_button" id="logout_button">ログアウト</a>
         <a href="#" class="a_button" id="getuser_button">ユーザ情報取得</a>
+        <a href="#" class="a_button" id="create_word_button">単語帳作成</a>
+        <a href="#" class="a_button" id="get_word_books">単語帳一覧</a>
+        <a href="#" class="a_button" id="delete_word_books">単語帳削除</a>
+        <a href="#" class="a_button" id="register_word">単語登録</a>
+        <input type="text" id="input_word" placeholder="単語">
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap;" id="word_book_div">
+        <div style="margin: 20px;">
+            <label for="wao">単語帳１</label>
+            <input type="checkbox" id="wao">
+        </div>
+    </div>
+
+    <div>
+        <textarea id="result_text" cols="100" rows="10">
+        </textarea>
+        <br>
+        <textarea id="status" cols="100" rows="1">
+        </textarea>
+        <br>
+        <input type="button" onClick="Start();" value="音認開始">
+
+        <div id="kaiseki_result">
+        </div>
     </div>
 
     <img src="" id="icon_img" alt="" style="width: 300px; height: 300px;">
-    
+
     <style>
         .a_button {
             display: block;
@@ -42,7 +67,10 @@
         }
     </style>
 
+    <script src="./scripts/Auth.js"></script>
+    <script src="./scripts/word.js"></script>
     <script src="./scripts/main.js"></script>
+    <script src="./scripts/stt.js"></script>
 </body>
 
 </html>

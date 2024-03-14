@@ -276,6 +276,7 @@ func main() {
 				ctx.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
+			
 		} else if err != nil {
 			ctx.JSON(500, gin.H{"error": err.Error()})
 			return
