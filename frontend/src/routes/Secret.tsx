@@ -11,6 +11,7 @@ import WordbookDetails from "../page/WordbookDetails";
 // コンテキスト
 import { ContextWrapper } from "../context/ContextWrapper";
 import VoicePage from "../page/VoicePage";
+import SavePage from "../page/SavePage";
 
 const Secret = () => {
   return (
@@ -22,6 +23,7 @@ const Secret = () => {
           <Route path="/HomePage" element={<HomePage />} />
           <Route path="/WordbookDetails" element={<WordbookDetails />} />
           <Route path="/VoicePage" element={<VoicePage />} />
+          <Route path="/SavePage" element={<SavePage />} />
           <Route path="/*" element={<NotFound />} />
           {/* </Route> */}
         </Routes>

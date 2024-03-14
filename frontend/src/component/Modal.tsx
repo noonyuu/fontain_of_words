@@ -1,23 +1,67 @@
-// モーダル
-import React from 'react'
+import React, { useState, useEffect, useContext } from "react";
+// コンテキスト
+import { GlobalContext } from "../context/GlobalContext";
 
 interface Btnprops {
-    word1: string
-    word2: string
+  title: string;
+  word1: string;
+  word2: string;
+  func: () => void;
 }
 
-const Modal:React.FC<Btnprops> = ({word1,word2}) => {
+const Modal: React.FC<Btnprops> = ({ title, word1, word2, func }) => {
+  const { openModal, record, setRecord, setOpenModal } =
+    useContext(GlobalContext);
+
+  const closeHandler = () => {
+    setOpenModal(false);
+    setRecord(record);
+  };
+
+  const ClickWord1 = (word: string) => {
+    if (word === word2) {
+      func();
+    } else {
+      setOpenModal(false);
+      console.log("reccooooood", record);
+      setRecord(record);
+    }
+  };
+
+  useEffect(() => {
+    console.log("openModal updated:", openModal);
+  }, [record, openModal]);
+
   return (
-    <div className='relative bg-black opacity-60 w-dvw h-dvh'>
-        <div className='absolute top-[50%] -translate-y-[50%] left-[50%] -translate-x-[50%] w-60 h-24 bg-white rounded-2xl'>
-            <button className='font-bold ml-[220px]'>✕</button>
-            <div className='flex justify-around items-center mt-3'>
-                <button className='border-2 rounded-md border-black w-20'>{word1}</button>
-                <button className='border-2 rounded-md border-black w-20'>{word2}</button>
+    <>
+      {openModal && (
+        <div className="h-dvh">
+          <div className="absolute right-1/2 top-1/2 z-20 h-24 w-60 -translate-y-[50%] translate-x-[50%] rounded-2xl border-2 bg-white">
+            <div className="mx-4 my-2 flex text-center">
+              <p className="w-full text-center font-bold">{title}</p>
+              <button className="font-bold" onClick={closeHandler}>
+                ✕
+              </button>
             </div>
+            <div className="mt-4 flex items-center justify-around">
+              <button
+                className="w-20 rounded-md border-2 border-black"
+                onClick={() => ClickWord1(word1)}
+              >
+                {word1}
+              </button>
+              <button
+                className="w-20 rounded-md border-2 border-black"
+                onClick={() => ClickWord1(word2)}
+              >
+                {word2}
+              </button>
+            </div>
+          </div>
         </div>
-    </div>
-  )
-}
+      )}
+    </>
+  );
+};
 
-export default Modal
+export default Modal;
