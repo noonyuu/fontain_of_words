@@ -11,20 +11,31 @@ const Router = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // 現在のパスが/ならloginへ遷移
-    if (window.location.pathname === "/") {
-      const token = GetInfo();
-      if (token) {
-        console.log("token");
-        const to = token;
-        navigate("/secret/HomePage");
-      } else {
-        navigate("/LoginPage");
+    const fetchUserInfo = async () => {
+      try {
+        const [loggedIn, userInfo] = await GetInfo();
+        if (loggedIn && userInfo) {
+          Refresh_Token();
+          // ログイン成功時の処理
+          if (
+            window.location.pathname === "/LoginPage" ||
+            window.location.pathname === "/"
+          ) {
+            navigate("/secret/HomePage");
+          } else {
+            navigate(window.location.pathname, { replace: true });
+          }
+        } else {
+          navigate("/LoginPage");
+        }
+      } catch (error) {
+        console.error("Error fetching user info:", error);
       }
-    }
+    };
 
-    Refresh_Token();
-  }, [navigate]);
+    fetchUserInfo();
+  }, []);
+
   return (
     <Routes>
       <Route path="/NewAccountPage" element={<NewAccountPage />} />
