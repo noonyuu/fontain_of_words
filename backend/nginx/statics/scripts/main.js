@@ -7,7 +7,7 @@ logout_button.addEventListener("click", async (evt) => {
 
     //成功したら
     if (result) {
-        
+        window.location.reload();
     }
 })
 
@@ -21,7 +21,7 @@ getuser_button.addEventListener("click", async (evt) => {
     const uinfo = await GetInfo();
 
     if (uinfo) {
-        icon_img.src = uinfo.icon;
+        icon_img.src = uinfo[1].icon;
     }
 });
 
@@ -35,46 +35,53 @@ refresh_button.addEventListener("click", async (evt) => {
 
 getuser_button.click();
 
-async function Refresh_Token() {
-    //トークン更新
-    const req = await fetch("/auth/refresh",{
-        method: "POST",
-    });
-
-    //200の時
-    if (req.status == 200) {
-        return true;
-    }
-
-    //それ以外の時
-    return false;
+async function main() {
+    const uinfo = await GetInfo();
+    console.log(uinfo[0]);
+    console.log(await Refresh_Token());
 }
 
-async function Logout() {
-    //ログアウト
-    const req = await fetch("/auth/logout",{
-        method: "POST",
-    });
+const txt_upload = document.getElementById("txt_upload");
 
-    //200の時
-    if (req.status == 200) {
-        return true;
+txt_upload.addEventListener("change", async (evt) => {
+    for (let result of await uptext(txt_upload.files[0])) {
+        kaiseki_result.insertAdjacentHTML("beforeend", result + "<br>");
     }
+})
 
-    //それ以外の時
-    return false;
+async function queai(text) {
+    try {
+        //トークン更新
+        const req = await fetch(base_path + "app/ai", {
+            method: "POST",
+            body: JSON.stringify({
+                "Text" : text
+            }),
+        });
+
+        //200の時
+        if (req.status == 200) {
+            console.log(await req.json());
+            return true;
+        }
+
+        //それ以外の時
+        return false;
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+        return false;
+    }
 }
 
-async function GetInfo() {
-    //ログアウト
-    const req = await fetch("/auth/getuser",{
-        method: "POST",
-    });
+const ai_word = document.getElementById("ai_word");
 
-    //200の時
-    if (req.status == 200) {
-        return await req.json();
-    }
+ai_word.addEventListener("click", async (evt) => {
+    evt.preventDefault();
 
-    return null;
-}
+    const result = await queai(input_word.value);
+
+    console.log(result);
+})
+
+main();
