@@ -1,5 +1,5 @@
 // 録音後、単語ごとのdiv
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import BookMark from './BookMark'
 import { GlobalContext } from "../context/GlobalContext";
 
@@ -8,7 +8,7 @@ interface Btnprops {
     selected: boolean
 }
 
-const Wards: React.FC<Btnprops> = ({ word }) => {
+const Wards: React.FC<Btnprops> = ({ word, selected }) => {
   const [wordsList, setWordsList] = React.useState<string[]>([]);
   const [mark, setMark] = useState(false);
   const { bookMarkBool, setBookMark } = useContext(GlobalContext);

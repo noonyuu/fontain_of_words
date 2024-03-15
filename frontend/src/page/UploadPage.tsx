@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
 import { MdOutlineFileUpload } from "react-icons/md"; // アップロードボタン
 import CategoryBox from '../component/CategoryBox';   // カテゴリー選択ボックス
-import { useNavigate } from 'react-router-dom';
 
 const UploadPage = () => {
 
