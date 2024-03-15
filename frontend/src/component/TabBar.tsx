@@ -1,35 +1,43 @@
-// 全文、単語のみ、検索履歴を選択する時の下線
-import React from 'react'
-import { Tabs } from 'antd';
-import type { TabsProps } from 'antd';
-import WardsVoice from './WardsVoice';
+import React, { useEffect } from "react";
+import { Tabs } from "antd";
+import type { TabsProps } from "antd";
+import WardsVoice from "./WardsVoice";
 
-const onChange = (key: string) => {
+import parse from "html-react-parser";
+
+const TabBar = () => {
+  const [result, setResult] = React.useState("");
+
+  useEffect(() => {
+    const storedResult = localStorage.getItem("result_result");
+    if (storedResult) {
+      setResult(storedResult);
+    }
+  }, []);
+
+  const onChange = (key: string) => {
     console.log(key);
   };
-  
-  const items: TabsProps['items'] = [
+
+  const items: TabsProps["items"] = [
     {
-      key: '1',
-      label: '全文',
-      children: 'Content of Tab Pane 1',
+      key: "1",
+      label: "全文",
+      children: parse(result),
     },
     {
-      key: '2',
-      label: '単語のみ',
-      children: <WardsVoice word='auto word'/>,
+      key: "2",
+      label: "単語のみ",
+      children: <WardsVoice word="2" />,
     },
     {
-      key: '3',
-      label: '検索履歴',
-      children: <WardsVoice word='search word'/>,
+      key: "3",
+      label: "検索履歴",
+      children: <WardsVoice word="3" />,
     },
   ];
 
-const TabBar = () => {
-   return(
-    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-   )
-}
+  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+};
 
-export default TabBar
+export default TabBar;
