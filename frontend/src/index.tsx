@@ -9,7 +9,7 @@ import HomePage from "./page/HomePage";
 import SavePage from "./page/SavePage";
 import UploadPage from "./page/UploadPage";
 import TabBar from "./component/TabBar";
-import CategoryPage_category from "./page/CategoryPage_category";
+import CategoryPage_category from "./page/CategoryPage";
 import Modal from "./component/Modal";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);

@@ -1,10 +1,11 @@
-// 単語ごとのdiv
-import React, { useContext, useEffect, useState } from "react";
-import BookMark from "./BookMark";
+// 録音後、単語ごとのdiv
+import React, { useState, useContext } from 'react'
+import BookMark from './BookMark'
 import { GlobalContext } from "../context/GlobalContext";
 
 interface Btnprops {
-  word: string;
+    word: string
+    selected: boolean
 }
 
 const Wards: React.FC<Btnprops> = ({ word }) => {
@@ -21,26 +22,12 @@ const Wards: React.FC<Btnprops> = ({ word }) => {
   }, []);
 
   return (
-    <>
-      {wordsList.map((word) => (
-        <div className="flex h-10 justify-between border-b-2 border-gray-300 p-1 text-xl text-mark underline">
-          <div>{word}</div>
-          <div className="mx-2">
-            <div
-              className="mx-2"
-              onClick={
-                bookMarkBool
-                  ? () => setBookMark(false)
-                  : () => setBookMark(true)
-              }
-            >
-              <BookMark bookmark={bookMarkBool} />
-            </div>
-          </div>
-        </div>
-      ))}
-    </>
-  );
-};
+    <li className='flex justify-between h-10 border-b-2 p-1 border-gray-300 text-mark text-xl underline list-none'>
+      <div>{word}</div>
+      <div className='mx-2' onClick={selected ? () => setBookMark(false) : () => setBookMark(true)}><BookMark bookmark={bookMarkBool}/></div>
+      {/* <div className='mx-2' onClick={mark ? () => setMark(false) : () => setMark(true)}><BookMark bookmark={mark}/></div> */}
+    </li>
+  )
+}
 
 export default Wards;

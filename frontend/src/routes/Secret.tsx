@@ -8,10 +8,12 @@ import Footer from "../component/Footer";
 import HomePage from "../page/HomePage";
 import NotFound from "../page/NotFound";
 import WordbookDetails from "../page/WordbookDetails";
+import TabBar from "../component/TabBar";
 // コンテキスト
 import { ContextWrapper } from "../context/ContextWrapper";
 import VoicePage from "../page/VoicePage";
 import SavePage from "../page/SavePage";
+import CategoryPage from "../page/CategoryPage";
 
 const Secret = () => {
   return (
@@ -24,6 +26,7 @@ const Secret = () => {
           <Route path="/WordbookDetails" element={<WordbookDetails />} />
           <Route path="/VoicePage" element={<VoicePage />} />
           <Route path="/SavePage" element={<SavePage />} />
+          <Route path="/CategoryPage" element={<CategoryPage />} />
           <Route path="/*" element={<NotFound />} />
           {/* </Route> */}
         </Routes>

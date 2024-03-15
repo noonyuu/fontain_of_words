@@ -1,12 +1,13 @@
 // 録音ページ
+import React from 'react'
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import parse from "html-react-parser";
-// コンポーネント
-import { RiArrowGoBackFill } from "react-icons/ri"; // 戻るボタン
-import VoiceBtn from "../component/VoiceBtn"; // 録音ボタン
-import CategoryBox from "../component/CategoryBox"; // カテゴリー選択ボックス
-import { useNavigate } from "react-router-dom";
-// コンテキスト
+
+// コンポーネントのインポート
+import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
+import VoiceBtn from '../component/VoiceBtn';         // 録音ボタン
+import CategoryBox from '../component/CategoryBox';   // カテゴリー選択ボックス
 
 const VoicePage = () => {
   const history = useNavigate();
