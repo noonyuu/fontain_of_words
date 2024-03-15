@@ -11,6 +11,8 @@ import (
 
 	"github.com/google/generative-ai-go/genai"
 	"google.golang.org/api/option"
+
+	"strings"
 )
 
 var (
@@ -50,7 +52,7 @@ func Gemini_Init() {
 
 	models = append(models, model)
 
-	milli_time := time.Millisecond * 10000
+	milli_time := time.Millisecond * 1000
 
 	go func() {
 		for {
@@ -70,7 +72,7 @@ func Gemini_Init() {
 			question_data := front.Value.(Question)
 
 			//偽物の場合戻る
-			if (question_data.isfake) {
+			if question_data.isfake {
 				time.Sleep(milli_time)
 				continue
 			}
@@ -142,8 +144,8 @@ func Get_text(resp *genai.GenerateContentResponse) string {
 
 func PushText(id string, text string) {
 	queue.PushBack(Question{
-		id:   id,
-		text: text,
+		id:     id,
+		text:   text,
 		isfake: false,
 	})
 }
@@ -160,7 +162,7 @@ func CallAI(id string, text string) (string, error) {
 	}
 
 	//単語取得
-	word_data ,err := GetWord_Byid(id)
+	word_data, err := GetWord_Byid(id)
 
 	if err != nil {
 		log.Println(err)
@@ -187,11 +189,25 @@ func CallAI(id string, text string) (string, error) {
 		return "", nil
 	}
 
+	ai_txt = strings.Replace(ai_txt, "*", "", -1)
+
 	//単語更新
 	err = UpdateWord(id, ai_txt)
 
 	if err != nil {
 		log.Println(err)
+		return "", nil
+	}
+
+	//検索中解除
+	word_data.IsSearching = false
+
+	//更新
+	result = dbconn.Save(&word_data)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
 		return "", nil
 	}
 

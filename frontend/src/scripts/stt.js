@@ -46,6 +46,10 @@ export const connect_ws = () => {
     console.log("websocket disconnected");
     is_connected = false;
 
+    if (try_count > 5) {
+      return;
+    }
+    
     connect_ws();
   };
 };
