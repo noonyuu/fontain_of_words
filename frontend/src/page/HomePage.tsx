@@ -27,7 +27,10 @@ const HomePage = () => {
         <HomeBtn_circle position="translate-x-36 lg:translate-x-[11.4rem] size-5 bg-[#7BFFEF]" />
       </div>
       <div className="mt-9 flex items-center justify-center">
-        <div className="text-center drop-shadow-mainShadow">
+        <div
+          className="text-center drop-shadow-mainShadow"
+          onClick={() => history("../WordbookDetails")}
+        >
           <HomeBtn text="単語帳" />
         </div>
         <HomeBtn_circle position="-translate-x-[6.7rem] lg:-translate-x-[8.5rem] size-10  bg-[#C5FFF8]" />

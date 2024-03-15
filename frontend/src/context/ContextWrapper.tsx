@@ -9,6 +9,7 @@ export const ContextWrapper: React.FC<ContextWrapperProps> = (props) => {
   const [profileModal, setProfileModal] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [record, setRecord] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<string>(""); // カテゴリー選択
 
   return (
     <GlobalContext.Provider
@@ -19,6 +20,8 @@ export const ContextWrapper: React.FC<ContextWrapperProps> = (props) => {
         setOpenModal,
         record,
         setRecord,
+        selectedItem,
+        setSelectedItem,
       }}
     >
       {props.children}

@@ -7,4 +7,6 @@ export const GlobalContext = React.createContext({
   setOpenModal: (value: boolean) => {},
   record: false,
   setRecord: (value: boolean) => {},
+  selectedItem: "",
+  setSelectedItem: (value: string) => {},
 })

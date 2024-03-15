@@ -1,24 +1,30 @@
 // プルダウンメニューと検索ボックス
-import React, { useState } from "react";
+import useConfig from "antd/es/config-provider/hooks/useConfig";
+import React, { useContext, useEffect, useState } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 
 interface Btnprops {
   elseCategory: boolean;
 }
 
 const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
- const [isOpen, setIsOpen] = useState(false);
- const [selectedItem, setSelectedItem] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const { selectedItem, setSelectedItem } = useContext(GlobalContext);
 
- const items = ["IT", "会議", "講義"];
+  const items = ["IT", "会議", "講義"];
 
- const handleItemClick = (item: string) => {
-   setSelectedItem(item);
-   setIsOpen(false);
- };
+  const handleItemClick = (item: string) => {
+    setSelectedItem(item);
+    setIsOpen(false);
+  };
 
- const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-   setSelectedItem(event.target.value);
- };
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedItem(event.target.value);
+  };
+
+  useEffect(() => {
+    console.log(selectedItem);
+  });
 
   return (
     // true：入力ボックス false：プルダウンメニュー(初期値)
@@ -38,7 +44,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
               value={selectedItem}
               onChange={handleInputChange}
               readOnly={!isOpen}
-              className="h-10 flex-grow cursor-pointer rounded-l-md bg-gray-100 px-4"
+              className="h-10 flex-grow cursor-pointer rounded-l-md w-full bg-gray-100 px-4"
               onClick={() => setIsOpen(!isOpen)}
             />
             {/* 展開矢印 */}
