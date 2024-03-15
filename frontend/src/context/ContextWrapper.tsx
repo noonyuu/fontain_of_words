@@ -10,6 +10,7 @@ export const ContextWrapper: React.FC<ContextWrapperProps> = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [record, setRecord] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string>(""); // カテゴリー選択
+  const [bookMarkBool, setBookMark] = useState(false);
 
   return (
     <GlobalContext.Provider
@@ -22,6 +23,8 @@ export const ContextWrapper: React.FC<ContextWrapperProps> = (props) => {
         setRecord,
         selectedItem,
         setSelectedItem,
+        bookMarkBool,
+        setBookMark,
       }}
     >
       {props.children}

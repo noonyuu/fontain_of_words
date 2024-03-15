@@ -1,43 +1,142 @@
-import React, { useEffect } from "react";
+// 全文、単語のみ、検索履歴を選択する時の下線
+import React, { useContext, useEffect, useState } from "react";
 import { Tabs } from "antd";
 import type { TabsProps } from "antd";
-import WardsVoice from "./WardsVoice";
+import { GlobalContext } from "../context/GlobalContext";
 
-import parse from "html-react-parser";
+// コンポーネントのインポート
+import BookMark from "./BookMark";
+import WardsVoice from "./WardsVoice";
+import { BsFillBookmarkDashFill } from "react-icons/bs"; // ブックマーク無
+import { BsFillBookmarkCheckFill } from "react-icons/bs"; // ブックマーク有
 
 const TabBar = () => {
-  const [result, setResult] = React.useState("");
+  
+  // 全データ
+  const words = [
+    [
+      "プロジェクト",
+      "プロジェクトは、特定の目標を達成するために一時的に行われる取り組みや作業のことを指します。プロジェクトは一定のスコープや期間、予算を持ち、それらの制約の中で目標を達成するための計画が立てられます。プロジェクトは、新しい製品やサービスの開発、インフラストラクチャの構築、組織内の変革など、さまざまな目的で実施されます。プロジェクトは通常、プロジェクトマネージャーがリーダーシップを取り、関係者とのコミュニケーションや進捗管理を行いながら進行します。",
+      "http://~~~~",
+    ],
+    ["アジャイル開発", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+  ];
+
+  // テスト：保存している有無を保持する
+  const test = [];
+
+  // 初期値をすべてfalseにする
+  for (let i = 0; i < words.length; i++) {
+    test[i] = false;
+  }
+
+  // ブックマークボタンの切り替え
+  const [selected, setSelected] = useState(test);
 
   useEffect(() => {
-    const storedResult = localStorage.getItem("result_result");
-    if (storedResult) {
-      setResult(storedResult);
-    }
-  }, []);
-
-  const onChange = (key: string) => {
-    console.log(key);
-  };
+    
+  });
 
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: "全文",
-      children: parse(result),
+      children: "Content of Tab Pane 1",
     },
     {
       key: "2",
       label: "単語のみ",
-      children: <WardsVoice word="2" />,
+      // ここで単語回す
+      children: (
+        <ul className="h-full ">
+          {words.map((word, index) => (
+            <li
+              key={index}
+              className="flex h-10 list-none justify-between border-b-2 border-gray-300 p-1 text-xl text-mark underline"
+            >
+              <div>{word[0]}</div>
+              <div
+                className="mx-2"
+                onClick={() =>
+                  setSelected(
+                    selected.map((item, selectIndex) =>
+                      index === selectIndex
+                        ? !selected[selectIndex]
+                        : selected[selectIndex],
+                    ),
+                  )
+                }
+              >
+                <button>
+                  {selected[index] ? (
+                    <BsFillBookmarkCheckFill className="size-7 text-yellow-300" />
+                  ) : (
+                    <BsFillBookmarkDashFill className="size-7 text-gray-300" />
+                  )}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ),
     },
     {
       key: "3",
       label: "検索履歴",
-      children: <WardsVoice word="3" />,
+      children: (
+        <ul className="overflow-y-scroll">
+          {words.map((word, index) => (
+            <li
+              key={index}
+              className="flex h-10 list-none justify-between border-b-2 border-gray-300 p-1 text-xl text-mark underline"
+            >
+              <div>{word[0]}</div>
+              <div
+                className="mx-2"
+                onClick={() =>
+                  setSelected(
+                    selected.map((item, selectIndex) =>
+                      index === selectIndex
+                        ? !selected[selectIndex]
+                        : selected[selectIndex],
+                    ),
+                  )
+                }
+              >
+                <button>
+                  {selected[index] ? (
+                    <BsFillBookmarkCheckFill className="size-7 text-yellow-300" />
+                  ) : (
+                    <BsFillBookmarkDashFill className="size-7 text-gray-300" />
+                  )}
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ),
     },
   ];
 
-  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+  return <Tabs defaultActiveKey="1" items={items} />;
 };
 
 export default TabBar;

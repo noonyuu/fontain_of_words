@@ -1,6 +1,7 @@
 // 単語ごとのdiv
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import BookMark from "./BookMark";
+import { GlobalContext } from "../context/GlobalContext";
 
 interface Btnprops {
   word: string;
@@ -8,6 +9,8 @@ interface Btnprops {
 
 const Wards: React.FC<Btnprops> = ({ word }) => {
   const [wordsList, setWordsList] = React.useState<string[]>([]);
+  const [mark, setMark] = useState(false);
+  const { bookMarkBool, setBookMark } = useContext(GlobalContext);
 
   useEffect(() => {
     const savedWordsList = JSON.parse(
@@ -23,7 +26,16 @@ const Wards: React.FC<Btnprops> = ({ word }) => {
         <div className="flex h-10 justify-between border-b-2 border-gray-300 p-1 text-xl text-mark underline">
           <div>{word}</div>
           <div className="mx-2">
-            <BookMark bookmark={false} />
+            <div
+              className="mx-2"
+              onClick={
+                bookMarkBool
+                  ? () => setBookMark(false)
+                  : () => setBookMark(true)
+              }
+            >
+              <BookMark bookmark={bookMarkBool} />
+            </div>
           </div>
         </div>
       ))}

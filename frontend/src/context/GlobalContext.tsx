@@ -9,4 +9,6 @@ export const GlobalContext = React.createContext({
   setRecord: (value: boolean) => {},
   selectedItem: "",
   setSelectedItem: (value: string) => {},
+  bookMarkBool: false,
+  setBookMark: (value: boolean) => {},
 })
