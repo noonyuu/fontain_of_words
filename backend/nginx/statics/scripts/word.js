@@ -241,6 +241,66 @@ async function UnregisterWord(id, wordid) {
     return false
 }
 
+//単語の説明を取得する
+async function GetWordDescription(id) {
+    try {
+        //リクエスト送信
+        const req = await fetch(base_path + "app/description/" + id, {
+            method: "GET",
+        })
+
+        //200の時
+        if (req.status == 200) {
+            //データ
+            const res_data = await req.json();
+
+            //データを返す
+            return [true,res_data["description"]];
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    return [false,""]
+}
+
+
+//単語の説明をAIに聞く (単語id,もう一度聞くか)
+async function CallAI(text,refresh) {
+    try {
+        let is_refresh = "0";
+
+        //もう一度聞くか
+        if (refresh) {
+            is_refresh = "1";
+        }
+
+        //リクエスト送信
+        const req = await fetch(base_path + "app/ai?refresh=" + is_refresh, {
+            method: "POST",
+            body: JSON.stringify({
+                "Text" : text
+            })
+        })
+
+        //200の時
+        if (req.status == 200) {
+            //データ
+            const res_data = await req.json();
+
+            //データを返す
+            console.log(res_data);
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+    }
+
+    return [false,""]
+}
+
+
 //テキストファイルをアップロードする
 async function uptext(file) {
     let results_list = [];

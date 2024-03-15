@@ -195,6 +195,18 @@ func CallAI(id string, text string) (string, error) {
 		return "", nil
 	}
 
+	//検索済みにする
+	word_data.IsSearching = false
+
+	//更新
+	result = dbconn.Save(&word_data)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return "", nil
+	}
+
 	return ai_txt, nil
 }
 
