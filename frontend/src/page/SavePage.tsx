@@ -23,6 +23,7 @@ const SavePage = () => {
     history("/secret/HomePage");
   };
 
+  // モーダルの切り替え
   const [btnBool, setBtnBool] = useState(false);
 
   return (
