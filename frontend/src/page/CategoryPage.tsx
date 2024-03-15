@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
 import SearchBox from '../component/SearchBox';       // 検索ボックス
 import WardsDictionary from '../component/WardsDictionary';
-import NewCategoryModal from '../component/NewCategoryModal';
 
 const CategoryPage_category = () => {
 
@@ -39,8 +38,6 @@ const CategoryPage_category = () => {
           {datas.map((index) => (
             <div><WardsDictionary word={index}/></div>
           ))}
-            {/* <div><WardsDictionary word='IT'/></div>
-            <div><WardsDictionary word='あああ'/></div> */}
         </div>
         <div className='absolute bottom-0 py-5 w-dvw text-center bg-white'>
             <button className='mb-7 w-3/4 h-10 bg-gray-300 rounded-xl' onClick={() => btnBool ? setBtnBool(false) : setBtnBool(true)}>カテゴリーの追加</button>
@@ -48,8 +45,8 @@ const CategoryPage_category = () => {
         {/* モーダル */}
         <div className={btnBool ? 'z-1' : 'hidden'}>
           <div className='absolute text-center top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 h-36 w-60 border-4 border-mark bg-white rounded-3xl text-xl'>
-            <button className='float-right size-8 bg-white border-2 border-mark rounded-full m-1 font-bold' onClick={() => setBtnBool(false)}>✕</button>
-            <div className='py-2 w-full border-b-2 border-mark' onClick={() => addData}>追加するカテゴリー</div>
+            <button className='flex float-right justify-center size-8 bg-white border-2 border-mark rounded-full m-1 font-bold' onClick={() => setBtnBool(false)}>✕</button>
+            <div className='py-2 w-full border-b-2 border-mark ' onClick={() => addData}>追加するカテゴリー</div>
             <input className='h-7 w-[80%] my-3 text-sm bg-gray-300 rounded-sm' placeholder={"カテゴリー名の入力"} onChange={(event) => setName(event.target.value)}></input>
             <button className='float-right mr-5 p-1 rounded-md text-base text-white bg-mark' onClick={addData}>追加する</button>
           </div>
