@@ -361,6 +361,7 @@ func main() {
 			ID:          word_id,
 			Word:        data.Word,
 			Description: "",
+			IsSearching: false,
 		})
 
 		//エラー処理
@@ -629,6 +630,7 @@ func main() {
 				ID:          word_id,
 				Word:        data.Text,
 				Description: "",
+				IsSearching: false,
 			})
 
 			//設定
@@ -647,9 +649,38 @@ func main() {
 			return
 		}
 
+		//説明文を取得
+		if word_data.Description != "" {
+			ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : word_data.Description})
+			return
+		}
+
+		//検索中なら戻る
+		if word_data.IsSearching {
+			ctx.JSON(200, gin.H{"result": "","status":"failed","Sear" : "searching","count":Count_Que()})
+			return
+		}
+
+		//説明文を取得
 		PushText(word_data.ID,word_data.Word)
 
-		ctx.JSON(200, gin.H{"result": "ok"})
+		//キューのカウントが多い場合
+		if (Count_Que() > 10) {
+			ctx.JSON(200, gin.H{"result": "","status":"wait","message" : "many que","count":Count_Que()})
+			return
+		}
+
+		//キューが少ない場合聞いてみる
+		result,err := CallAI(word_data.ID,word_data.Word)
+
+		//エラー処理
+		if err != nil {
+			log.Println(err)
+			ctx.JSON(500, gin.H{"message": err.Error()})
+			return
+		}
+
+		ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : result})
 	})
 
 	//WebSocket

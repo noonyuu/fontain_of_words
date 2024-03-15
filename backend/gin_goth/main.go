@@ -33,6 +33,8 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 
 	"github.com/mileusna/useragent"
+
+	"github.com/JGLTechnologies/gin-rate-limit"
 )
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
@@ -56,6 +58,15 @@ var (
 	exp_time = 31536000
 	domain = ""
 )
+
+
+func keyFunc(ctx *gin.Context) string {
+	return ctx.ClientIP()
+}
+
+func errorHandler(ctx *gin.Context, info ratelimit.Info) {
+	ctx.String(429, "Too many requests. Try again in "+time.Until(info.ResetTime).String())
+}
 
 func main() {
 	loadEnv()
@@ -121,6 +132,18 @@ func main() {
 
 	//ルータ
 	router := gin.Default()
+
+	ratelimit_store := ratelimit.InMemoryStore(&ratelimit.InMemoryOptions{
+		Rate:  time.Second,
+		Limit: 5,
+	})
+	
+	mw := ratelimit.RateLimiter(ratelimit_store, &ratelimit.Options{
+		ErrorHandler: errorHandler,
+		KeyFunc: keyFunc,
+	})
+
+	router.Use(mw)
 
 	//セッション設定
 	session_store := cookie.NewStore([]byte(key))

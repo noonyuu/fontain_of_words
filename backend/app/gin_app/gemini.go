@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"context"
 	"fmt"
+	"gin_app/database"
 	"log"
 	"os"
 	"time"
@@ -19,8 +20,9 @@ var (
 )
 
 type Question struct {
-	id   string
-	text string
+	id     string
+	text   string
+	isfake bool
 }
 
 func Gemini_Init() {
@@ -48,37 +50,43 @@ func Gemini_Init() {
 
 	models = append(models, model)
 
-	go func ()  {
+	milli_time := time.Millisecond * 10000
+
+	go func() {
 		for {
 			// Dequeue
 			front := queue.Front()
 
-			log.Println(front)
-
+			//キューから取得
 			if front == nil {
-				time.Sleep(time.Millisecond * 500)
+				time.Sleep(milli_time)
 				continue
 			}
 
-			question_data := front.Value.(Question)
-
-			go func ()  {
-				ai_txt,err := QueAi(question_data.text)	
-
-				if err != nil {
-					log.Println(err)
-					return
-				}
-
-				log.Println(ai_txt)
-			}()
 			// This frees up memory and prevents memory leaks.
 			queue.Remove(front)
 
+			// キューから取得
+			question_data := front.Value.(Question)
+
+			//偽物の場合戻る
+			if (question_data.isfake) {
+				time.Sleep(milli_time)
+				continue
+			}
+
+			go func() {
+				//ID取得
+				question_id := question_data.id
+
+				//AIに聞く
+				CallAI(question_id, question_data.text)
+			}()
+
 			// Sleep
-			time.Sleep(time.Millisecond * 500)
+			time.Sleep(milli_time)
 		}
-	} ()
+	}()
 }
 
 func QueAi(text string) (string, error) {
@@ -132,9 +140,64 @@ func Get_text(resp *genai.GenerateContentResponse) string {
 	return result_txt
 }
 
-func PushText(id string,text string) {
+func PushText(id string, text string) {
 	queue.PushBack(Question{
 		id:   id,
 		text: text,
+		isfake: false,
 	})
+}
+
+// AIに聞く
+func CallAI(id string, text string) (string, error) {
+	//データベース接続を取得する
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//単語取得
+	word_data ,err := GetWord_Byid(id)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//検索中にする
+	word_data.IsSearching = true
+
+	//更新
+	result := dbconn.Save(&word_data)
+
+	//エラー処理
+	if result.Error != nil {
+		log.Println(result.Error)
+		return "", nil
+	}
+
+	//AI生成
+	ai_txt, err := QueAi(text)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	//単語更新
+	err = UpdateWord(id, ai_txt)
+
+	if err != nil {
+		log.Println(err)
+		return "", nil
+	}
+
+	return ai_txt, nil
+}
+
+func Count_Que() int {
+	return queue.Len()
 }
