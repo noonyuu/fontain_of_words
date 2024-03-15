@@ -6,8 +6,9 @@ let wsconn = null;
 let is_first = false;
 let is_restart = true;
 let recognition = null;
-const ws_url = "wss://fountain-of-words.noonyuu.com/app/ws";
-// const ws_url = "wss://localhost:8443/app/ws";
+//const ws_url = "wss://fountain-of-words.noonyuu.com/app/ws";
+const ws_url = "wss://localhost:8443/app/ws";
+let try_count = 0;
 
 export const connect_ws = () => {
   //接続
@@ -23,6 +24,8 @@ export const connect_ws = () => {
     }
 
     is_first = false;
+
+    try_count = 0;
   };
 
   //メッセージが来たとき
@@ -91,6 +94,8 @@ export const vr_function = () => {
     } else {
       flag_speech = 1;
     }
+
+    console.log(results[0][0].transcript);
   };
   flag_speech = 0;
   const status = document.getElementById("status");

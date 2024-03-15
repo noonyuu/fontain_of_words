@@ -16,10 +16,10 @@ const VoicePage = () => {
     const interval = setInterval(() => {
       const text: string | null = localStorage.getItem("recode");
       if (text) {
-        console.log(text);
+        //console.log(text);
         let result = text.replace(/\|\|--/g, "<span className='text-red-500'>");
         result = result.replace(/--\|\|/g, "</span>");
-        console.log(result);
+        //console.log(result);
         setVoice(result);
       }
     }, 1000); // 1秒ごとに更新
