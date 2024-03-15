@@ -21,13 +21,13 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { selectedItem, setSelectedItem } = useContext(GlobalContext);
 
-  const handleItemClick = (item: string) => {
-    setSelectedItem(item);
+  const handleItemClick = (id: number, name: string) => {
+    setSelectedItem([{ id, name }]);
     setIsOpen(false);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedItem(event.target.value);
+    setSelectedItem([{ id: 0, name: event.target.value }]);
   };
 
   const [items, setItems] = useState<BooksResponse | null>(null);
@@ -64,7 +64,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
           <div className="flex items-center">
             <input
               type="text"
-              value={selectedItem}
+              value={selectedItem[0]?.name}
               onChange={handleInputChange}
               readOnly={!isOpen}
               className="h-10 w-full flex-grow cursor-pointer rounded-l-md bg-gray-100 px-4"
@@ -97,7 +97,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
                 <div
                   key={item.Id}
                   className="p-2 hover:bg-gray-100"
-                  onClick={() => handleItemClick(item.Name)}
+                  onClick={() => handleItemClick(item.Id, item.Name)}
                 >
                   {item.Name}
                 </div>

@@ -36,14 +36,13 @@ const VoiceBtn = () => {
   // 保存ページへ
   const Save = () => {
     setOpenModal(false);
-    console.log(selectedItem);
-    if (selectedItem === "") {
+    if (selectedItem[0]?.name === undefined) {
       alert("カテゴリーを選択してください");
     }else{
       Stop();
+      setRecord(false);
       history("../SavePage");
     }
-    // history("../SavePage");
   };
 
   // 録音
@@ -51,7 +50,6 @@ const VoiceBtn = () => {
     Init();
     console.log("録音開始");
     Start();
-    console.log("openModal", openModal);
     if (!openModal) {
       setRecord(true);
       henkan();
