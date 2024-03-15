@@ -36,6 +36,13 @@ const VoiceBtn = () => {
   // 保存ページへ
   const Save = () => {
     setOpenModal(false);
+    console.log(selectedItem);
+    if (selectedItem === "") {
+      alert("カテゴリーを選択してください");
+    }else{
+      Stop();
+      history("../SavePage");
+    }
     // history("../SavePage");
   };
 
