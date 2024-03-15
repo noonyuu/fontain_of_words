@@ -189,16 +189,6 @@ func CallAI(id string, text string) (string, error) {
 		return "", nil
 	}
 
-	ai_txt = strings.Replace(ai_txt, "*", "", -1)
-
-	//単語更新
-	err = UpdateWord(id, ai_txt)
-
-	if err != nil {
-		log.Println(err)
-		return "", nil
-	}
-
 	//検索中解除
 	word_data.IsSearching = false
 
@@ -208,6 +198,16 @@ func CallAI(id string, text string) (string, error) {
 	//エラー処理
 	if result.Error != nil {
 		log.Println(result.Error)
+		return "", nil
+	}
+
+	ai_txt = strings.Replace(ai_txt, "*", "", -1)
+
+	//単語更新
+	err = UpdateWord(id, ai_txt)
+
+	if err != nil {
+		log.Println(err)
 		return "", nil
 	}
 

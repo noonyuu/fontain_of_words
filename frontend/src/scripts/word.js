@@ -108,6 +108,28 @@
 
 const base_path = "https://localhost:8443/";
 
+export const create_book = async function create_book(name) {
+    try {
+        //単語帳作成
+        const req = await fetch(base_path + "app/wordbook/create", {
+            method: "POST",
+            body: JSON.stringify({
+                Name: name,
+            }),
+        });
+
+        //200の時
+        if (req.status == 200) {
+            console.log(await req.json());
+            return true;
+        }
+    } catch (ex) {
+        //エラー
+        console.log(ex);
+        return false;
+    }
+}
+
 //単語帳を削除する (成功したらtrueを返す)
 export const Delete_word_book = async function delete_word_book(bookid) {
 

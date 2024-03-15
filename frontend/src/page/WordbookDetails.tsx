@@ -8,6 +8,7 @@ import { LiaTimesSolid } from "react-icons/lia";
 import { FaLink } from "react-icons/fa6";
 
 import { Get_words, } from "../scripts/word";
+import { useParams } from "react-router-dom";
 
 const WordbookDetails = () => {
     const [title, setTitle] = useState("");
@@ -27,13 +28,15 @@ const WordbookDetails = () => {
     const [modal, setModal] = useState(false);
     const [loading, setLoading] = React.useState(true);
     let is_refresh = false;
+    const { id } = useParams()
 
     React.useEffect(() => {
         // すでに初期化されていたら処理を抜ける
         if (!loading) {
             return;
         }
-        Get_words("4b77582e-b1f1-4252-af9c-c16b869e56fd").then((data: any) => {
+
+        Get_words(id).then((data: any) => {
             setWord(data.data);
         });
         // 初期化済みのフラグを立てる
