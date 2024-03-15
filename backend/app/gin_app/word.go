@@ -7,6 +7,8 @@ import (
 	"gin_app/database"
 
 	"log"
+
+	"strings"
 )
 
 func GenID() (string, error) {
@@ -431,6 +433,7 @@ func UpdateWord(wordid string,description string) error {
 		return err
 	}
 
+	description = strings.Replace(description,"*","",-1)
 	//意味更新
 	word.Description = description
 
