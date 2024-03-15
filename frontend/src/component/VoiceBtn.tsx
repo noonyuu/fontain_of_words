@@ -36,7 +36,7 @@ const VoiceBtn = () => {
   // 保存ページへ
   const Save = () => {
     setOpenModal(false);
-    history("../SavePage");
+    // history("../SavePage");
   };
 
   // 録音

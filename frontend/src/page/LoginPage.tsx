@@ -51,7 +51,7 @@ const LoginPage = () => {
           <LoginBtn
             name="Microsoft"
             icon={<IoLogoMicrosoft />}
-            loginLink="microsoft"
+            loginLink="microsoftonline"
           />
         </div>
         {/* <div className="mt-[120px] text-center lg:my-[50px]" onClick={register}>
