@@ -1,18 +1,34 @@
 // 単語ごとのdiv
-import React from 'react'
-import BookMark from './BookMark'
+import React, { useEffect } from "react";
+import BookMark from "./BookMark";
 
 interface Btnprops {
-    word: string
+  word: string;
 }
 
-const Wards:React.FC<Btnprops> = ({word}) => {
+const Wards: React.FC<Btnprops> = ({ word }) => {
+  const [wordsList, setWordsList] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    const savedWordsList = JSON.parse(
+      localStorage.getItem("wordsList") || "[]",
+    );
+    setWordsList(savedWordsList);
+    console.log(savedWordsList);
+  }, []);
+
   return (
-    <div className='flex justify-between h-10 border-b-2 p-1 border-gray-300 text-mark text-xl underline'>
-      <div>{word}</div>
-      <div className='mx-2'><BookMark bookmark={false}/></div>
-    </div>
-  )
-}
+    <>
+      {wordsList.map((word) => (
+        <div className="flex h-10 justify-between border-b-2 border-gray-300 p-1 text-xl text-mark underline">
+          <div>{word}</div>
+          <div className="mx-2">
+            <BookMark bookmark={false} />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
 
-export default Wards
+export default Wards;

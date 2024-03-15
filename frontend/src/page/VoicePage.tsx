@@ -16,10 +16,21 @@ const VoicePage = () => {
     const interval = setInterval(() => {
       const text: string | null = localStorage.getItem("recode");
       if (text) {
-        console.log(text);
+        // console.log(text);
         let result = text.replace(/\|\|--/g, "<span className='text-red-500'>");
         result = result.replace(/--\|\|/g, "</span>");
-        console.log(result);
+        const matches = text.match(/\|\|--(.*?)--\|\|/g);
+        // console.log(matches);
+        if (matches) {
+          const wordsList = matches.map((match) =>
+            match.replace(/\|\|--(.*?)--\|\|/, "$1"),
+          );
+          console.log(wordsList);
+          localStorage.setItem("wordsList", JSON.stringify(wordsList));
+        }
+        localStorage.setItem("result_result" , result);
+
+        // console.log(result);
         setVoice(result);
       }
     }, 1000); // 1秒ごとに更新
