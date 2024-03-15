@@ -21,18 +21,36 @@ const TabBar = () => {
     ],
     ["アジャイル開発", "", "http://~~~~"],
     ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+    ["スプリント", "", "http://~~~~"],
+
   ];
 
   // テスト：保存している有無を保持する
-  const test =  [false,false,false];
+  const test =  [];
+
+  // 初期値をすべてfalseにする
+  for(let i = 0; i < words.length; i++){
+    test[i] = false;
+  }
   
   // ブックマークボタンの切り替え
-  // const {bookMarkBool, setBookMark} = useContext(GlobalContext);
   const [selected, setSelected] = useState(test);
-
-  const BtnBool = false;
-
-  const targetIndex = useState(false);
 
   useEffect(()=>{
     console.log()
@@ -49,9 +67,35 @@ const TabBar = () => {
       label: '単語のみ',
       // ここで単語回す
       children: 
-      <ul>
-        {words.map((word,index) => (
+      <ul className='h-full overflow-auto'>
+        {words.map((word,index) => ( 
+          <li
+            key={index}
+            className='flex justify-between h-10 border-b-2 p-1 border-gray-300 text-mark text-xl underline list-none overflow-y-auto'
+          >
+            <div>{word[0]}</div>
+            <div 
+              className='mx-2' 
+              onClick={() => setSelected(selected.map((item,selectIndex) => (index === selectIndex ? !selected[selectIndex] : selected[selectIndex])))}
+            >
+              <button>
+                {selected[index]
+                ? <BsFillBookmarkCheckFill className='text-yellow-300 size-7'/>
+                : <BsFillBookmarkDashFill className='text-gray-300 size-7'/>}
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
 
+    },
+    {
+      key: '3',
+      label: '検索履歴',
+      children:
+      <ul className='overflow-y-scroll'>
+
+        {words.map((word,index) => (
           <li
             key={index}
             className='flex justify-between h-10 border-b-2 p-1 border-gray-300 text-mark text-xl underline list-none'
@@ -69,13 +113,8 @@ const TabBar = () => {
             </div>
           </li>
         ))}
-
       </ul>
-    },
-    {
-      key: '3',
-      label: '検索履歴',
-      // children: <WardsVoice word='search word'/>,
+
     },
   ];
 

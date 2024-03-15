@@ -8,9 +8,9 @@ import HomePage from "../page/HomePage";
 import VoicePage from "../page/VoicePage";
 import SavePage from "../page/SavePage";
 import UploadPage from "../page/UploadPage";
-import TabBar from "../component/TabBar";
 import CategoryPage from "../page/CategoryPage";
-import Modal from "../component/Modal";
+// コンポーネントのインポート
+import TabBar from "../component/TabBar";
 
 const Secret = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const Secret = () => {
           <Route path="/VoicePage" element={<VoicePage />} />
           <Route path="/SavePage" element={<SavePage />} />
           <Route path="/UploadPage" element={<UploadPage />} />
-          <Route path="/TabBar" element={<TabBar />} />
           <Route path="/CategoryPage" element={<CategoryPage />} />
+          <Route path="/TabBar" element={<TabBar />} />
           {/* </Route> */}
         </Routes>
         <Footer />
