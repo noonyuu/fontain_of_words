@@ -15,8 +15,6 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/gorilla/websocket"
-
-	"github.com/gin-contrib/cors"  //TODO 開発用!
 )
 
 var upgrader = websocket.Upgrader{
@@ -43,13 +41,13 @@ func main() {
 
 	//フォルダを削除する
 	if err := os.Remove("texts"); err != nil {
-        log.Println(err)
-    }
+		log.Println(err)
+	}
 
 	//フォルダを作成する
 	if err := os.Mkdir("texts", 0777); err != nil {
-        log.Fatalln(err)
-    }
+		log.Fatalln(err)
+	}
 
 	Init()
 	//パーサー初期化
@@ -68,11 +66,28 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	//検索中初期化
+	dbconn, err := database.GetDB()
+
+	//エラー処理
+	if err != nil {
+		//パニックを起こす
+		log.Fatalln(err)
+	}
+
+	//検索中を false にする
+	init_result := dbconn.Model(&database.Word{}).Where(database.Word{IsSearching: true}).Update("IsSearching", false)
+
+	//エラー処理
+	if init_result.Error != nil {
+		//パニックを起こす
+		log.Fatalln(init_result.Error)
+	}
+
+	log.Println(init_result.RowsAffected)
+
 	//ルーター
 	router := gin.Default()
-
-	//TODO 開発用!
-	router.Use(cors.Default())
 
 	//認証用ミドルウェア
 	router.Use(AuthMiddleware())
@@ -92,7 +107,7 @@ func main() {
 		user := user_data.(*auth_grpc.User)
 		log.Println(user)
 
-		ctx.Redirect(http.StatusTemporaryRedirect, "/")
+		ctx.Redirect(http.StatusTemporaryRedirect, "/statics/index.html")
 	})
 
 	router.GET("/ping", func(ctx *gin.Context) {
@@ -507,7 +522,7 @@ func main() {
 		}
 
 		//ファイル取得
-		file,err := ctx.FormFile("file")
+		file, err := ctx.FormFile("file")
 
 		//エラー処理
 		if err != nil {
@@ -517,7 +532,7 @@ func main() {
 		}
 
 		//IDを生成
-		uid,err := GenID()
+		uid, err := GenID()
 
 		//エラー処理
 		if err != nil {
@@ -527,7 +542,7 @@ func main() {
 		}
 
 		//ファイル保存
-		savepath := filepath.Join("./texts",uid + ".txt")	
+		savepath := filepath.Join("./texts", uid+".txt")
 
 		//ファイル保存
 		err = ctx.SaveUploadedFile(file, savepath)
@@ -540,7 +555,7 @@ func main() {
 		}
 
 		//テキストを取得
-		tfile,err := os.Open(savepath)
+		tfile, err := os.Open(savepath)
 
 		//エラー処理
 		if err != nil {
@@ -559,7 +574,7 @@ func main() {
 			text := scanner.Text()
 
 			//テキスト解析
-			total_result = append(total_result,parse_sentence(text))
+			total_result = append(total_result, parse_sentence(text))
 		}
 
 		//エラー処理
@@ -615,6 +630,10 @@ func main() {
 			return
 		}
 
+		//クエリから取得
+		is_refresh := ctx.DefaultQuery("refresh", "0")
+
+		//単語を取得
 		word_data, err := GetWord(data.Text)
 
 		if err == gorm.ErrRecordNotFound {
@@ -647,36 +666,40 @@ func main() {
 				ctx.JSON(500, gin.H{"message": err.Error()})
 				return
 			}
-			
+
 		} else if err != nil {
 			log.Println(err)
 			ctx.JSON(500, gin.H{"message": err.Error()})
 			return
 		}
 
-		//説明文を取得
-		if word_data.Description != "" {
-			ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : word_data.Description})
-			return
+		log.Println(is_refresh)
+
+		if is_refresh == "0" {
+			//説明文を取得
+			if word_data.Description != "" {
+				ctx.JSON(200, gin.H{"result": "ok", "status": "success", "message": word_data.Description})
+				return
+			}
 		}
 
 		//検索中なら戻る
 		if word_data.IsSearching {
-			ctx.JSON(200, gin.H{"result": "","status":"failed","Sear" : "searching","count":Count_Que()})
+			ctx.JSON(200, gin.H{"result": "", "status": "failed", "Sear": "searching", "count": Count_Que()})
 			return
 		}
 
 		//説明文を取得
-		PushText(word_data.ID,word_data.Word)
+		PushText(word_data.ID, word_data.Word)
 
 		//キューのカウントが多い場合
-		if (Count_Que() > 10) {
-			ctx.JSON(200, gin.H{"result": "","status":"wait","message" : "many que","count":Count_Que()})
+		if Count_Que() > 10 {
+			ctx.JSON(200, gin.H{"result": "", "status": "wait", "message": "many que", "count": Count_Que()})
 			return
 		}
 
 		//キューが少ない場合聞いてみる
-		result,err := CallAI(word_data.ID,word_data.Word)
+		result, err := CallAI(word_data.ID, word_data.Word)
 
 		//エラー処理
 		if err != nil {
@@ -685,7 +708,7 @@ func main() {
 			return
 		}
 
-		ctx.JSON(200, gin.H{"result": "ok","status":"success","message" : result})
+		ctx.JSON(200, gin.H{"result": "ok", "status": "success", "message": result})
 	})
 
 	//WebSocket
