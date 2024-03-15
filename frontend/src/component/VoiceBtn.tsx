@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // コンテキスト
 import { GlobalContext } from "../context/GlobalContext";
 
-import { Init, Start ,Stop } from "../connections/Voice";
+import { Init, Start, Stop } from "../connections/Voice";
 
 interface Btnprops {
   voice: boolean;
@@ -15,7 +15,7 @@ interface Btnprops {
 
 const VoiceBtn = () => {
   const history = useNavigate();
-  const { openModal, record, setRecord, setOpenModal } =
+  const { openModal, record, selectedItem, setRecord, setOpenModal } =
     useContext(GlobalContext);
 
   const [r, setR] = useState("");
@@ -41,7 +41,6 @@ const VoiceBtn = () => {
 
   // 録音
   const Record = () => {
-    // console.log("録音中");
     Init();
     console.log("録音開始");
     Start();

@@ -13,9 +13,7 @@ const Router = () => {
   useEffect(() => {
     // 現在のパスが/ならloginへ遷移
     if (window.location.pathname === "/") {
-      console.log("login");
       const token = GetInfo();
-      // console.log(token);
       if (token) {
         console.log("token");
         const to = token;

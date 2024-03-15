@@ -16,10 +16,10 @@ import { Refresh_Token, Logout, GetInfo } from "../connections/Auth";
 const LoginPage = () => {
   const history = useNavigate();
 
-  const register = () => {
-    console.log("register");
-    history("/NewAccountPage");
-  };
+  // const register = () => {
+  //   console.log("register");
+  //   history("/NewAccountPage");
+  // };
 
   const a = () => {
     console.log("test");
@@ -54,9 +54,9 @@ const LoginPage = () => {
             loginLink="microsoft"
           />
         </div>
-        <div className="mt-[120px] text-center lg:my-[50px]" onClick={register}>
+        {/* <div className="mt-[120px] text-center lg:my-[50px]" onClick={register}>
           <NewAccountBtn text="アカウントの新規登録はこちらから" />
-        </div>
+        </div> */}
         <button onClick={a}>ろぐいん</button>
       </main>
     </>
