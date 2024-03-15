@@ -6,6 +6,7 @@ let wsconn = null;
 let is_first = false;
 let is_restart = true;
 let recognition = null;
+let try_count = 0;
 const ws_url = 'wss://localhost:8443/app/ws';
 
 function connect_ws() {
@@ -16,6 +17,8 @@ function connect_ws() {
     wsconn.onopen = function () {
         console.log('websocket connected');
         is_connected = true;
+
+        try_count = 0;
 
         if (!is_first) {
             return
@@ -35,6 +38,12 @@ function connect_ws() {
     wsconn.onclose = function () {
         console.log('websocket disconnected');
         is_connected = false;
+
+        try_count++;
+
+        if (try_count > 5) {
+            return;
+        }
 
         connect_ws();
     }
@@ -108,6 +117,12 @@ function Init() {
 }
 
 function Start() {
+    if (!is_connected) {
+        try_count = 0;
+        connect_ws();
+    }
+
+
     //接続済みなら音声認識開始
     if (is_connected) {
         is_restart = true;

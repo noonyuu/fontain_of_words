@@ -23,7 +23,7 @@ const Secret = () => {
         <Routes>
           {/* <Route> */}
           <Route path="/HomePage" element={<HomePage />} />
-          <Route path="/WordbookDetails" element={<WordbookDetails />} />
+          <Route path="/WordbookDetails/:id" element={<WordbookDetails />} />
           <Route path="/VoicePage" element={<VoicePage />} />
           <Route path="/SavePage" element={<SavePage />} />
           <Route path="/CategoryPage" element={<CategoryPage />} />

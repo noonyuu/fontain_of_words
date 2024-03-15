@@ -15,6 +15,9 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/gorilla/websocket"
+
+	//TOOD 開発用
+	"github.com/gin-contrib/cors"
 )
 
 var upgrader = websocket.Upgrader{
@@ -88,6 +91,9 @@ func main() {
 
 	//ルーター
 	router := gin.Default()
+
+	//TODO CORS
+	router.Use(cors.Default())
 
 	//認証用ミドルウェア
 	router.Use(AuthMiddleware())

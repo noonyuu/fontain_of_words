@@ -53,8 +53,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			log.Println(err)
 		 	//TODO 必ず戻す
-			token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMxNzgyNjQsInRva2VuaWQiOiI5YzRkMTBlNWM3NmI0MjU1OWJhNDIzMzdkMmJiMDVlZCJ9.o9nBTpdq1H5oOl6aznkonR35p-9CiGGYmjNr9j0YitztVfSj2NHsubJKUv3bcEOTZ48XhoRP2R3JOHqORjPAyg"
-
+			ctx.Next()
+			return
 		}
 
 		// log.Println(token)
