@@ -3,6 +3,16 @@ import useConfig from "antd/es/config-provider/hooks/useConfig";
 import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 
+interface Book {
+  Id: number;
+  Name: string;
+}
+
+// Define the structure of your fetched data
+interface BooksResponse {
+  books: Book[];
+}
+
 interface Btnprops {
   elseCategory: boolean;
 }
@@ -10,8 +20,6 @@ interface Btnprops {
 const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { selectedItem, setSelectedItem } = useContext(GlobalContext);
-
-  const items = ["IT", "会議", "講義"];
 
   const handleItemClick = (item: string) => {
     setSelectedItem(item);
@@ -22,9 +30,24 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
     setSelectedItem(event.target.value);
   };
 
+  const [items, setItems] = useState<BooksResponse | null>(null);
+
   useEffect(() => {
-    console.log(selectedItem);
-  });
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "https://fountain-of-words.noonyuu.com/app/wordbook/get_books",
+        );
+        const data: BooksResponse = await response.json();
+        setItems(data);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setItems(null); // Ensure state is updated even on error
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     // true：入力ボックス false：プルダウンメニュー(初期値)
@@ -44,7 +67,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
               value={selectedItem}
               onChange={handleInputChange}
               readOnly={!isOpen}
-              className="h-10 flex-grow cursor-pointer rounded-l-md w-full bg-gray-100 px-4"
+              className="h-10 w-full flex-grow cursor-pointer rounded-l-md bg-gray-100 px-4"
               onClick={() => setIsOpen(!isOpen)}
             />
             {/* 展開矢印 */}
@@ -68,19 +91,19 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
               </svg>
             </div>
           </div>
-          {isOpen && (
+          {isOpen && items ? (
             <div className="absolute z-10 w-full border bg-white">
-              {items.map((item, index) => (
+              {items.books.map((item) => (
                 <div
-                  key={index}
+                  key={item.Id}
                   className="p-2 hover:bg-gray-100"
-                  onClick={() => handleItemClick(item)}
+                  onClick={() => handleItemClick(item.Name)}
                 >
-                  {item}
+                  {item.Name}
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
         </div>
       )}
     </>
