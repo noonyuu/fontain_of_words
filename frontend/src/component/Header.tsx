@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
 
-import { Logout } from "../connections/Auth";
+import { Logout } from "../scripts/Auth";
 
 const Header = () => {
   const { profileModal, setProfileModal } = useContext(GlobalContext);

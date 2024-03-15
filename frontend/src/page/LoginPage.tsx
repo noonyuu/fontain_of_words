@@ -11,7 +11,7 @@ import { SiGithub } from "react-icons/si"; // GitHub
 import { FaLine } from "react-icons/fa"; // Line
 import { IoLogoMicrosoft } from "react-icons/io5"; // Microsoft
 
-import { Refresh_Token, Logout, GetInfo } from "../connections/Auth";
+import { Refresh_Token, Logout, GetInfo } from "../scripts/Auth";
 
 const LoginPage = () => {
   const history = useNavigate();

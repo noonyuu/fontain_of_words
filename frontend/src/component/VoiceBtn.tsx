@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // コンテキスト
 import { GlobalContext } from "../context/GlobalContext";
 
-import { Init, Start, Stop } from "../connections/Voice";
+import { Init, Start, Stop } from "../scripts/stt";
 
 interface Btnprops {
   voice: boolean;

@@ -5,7 +5,7 @@ import Notfound from "./page/NotFound";
 import LoginPage from "./page/LoginPage";
 import NewAccountPage from "./page/NewAccountPage";
 import { useEffect } from "react";
-import { GetInfo, Refresh_Token } from "./connections/Auth";
+import { GetInfo, Refresh_Token } from "./scripts/Auth";
 
 const Router = () => {
   const navigate = useNavigate();
