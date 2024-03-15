@@ -11,8 +11,9 @@ const VoiceBtn:React.FC<Btnprops> = ({voice}) => {
     // false：録音開始ボタン　true：録音中ボタン
     <div>
       {voice
-      ?<MdKeyboardVoice className='text-5xl size-16 lg:size-20 text-justify bg-gray-400 rounded-full mt-0'/> 
-      :<MdKeyboardVoice className='text-5xl size-16 lg:size-20 text-justify bg-mark rounded-full mt-0'/>}
+      ?<MdKeyboardVoice className='text-5xl size-16 lg:size-20 text-justify bg-mark rounded-full mt-0'/>
+      :<MdKeyboardVoice className='text-5xl size-16 lg:size-20 text-justify bg-gray-400 rounded-full mt-0'/> 
+    }
     </div>
   )
 }

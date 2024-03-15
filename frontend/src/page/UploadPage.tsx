@@ -1,14 +1,24 @@
 // テキストアップロードページ
 import React from 'react'
+import { useNavigate } from "react-router-dom";
+
+// コンポーネントのインポート
 import { RiArrowGoBackFill } from "react-icons/ri";   // 戻るボタン
 import { MdOutlineFileUpload } from "react-icons/md"; // アップロードボタン
 import CategoryBox from '../component/CategoryBox';   // カテゴリー選択ボックス
 
 const UploadPage = () => {
+
+  const history = useNavigate();
+
+  const returnPage = () => {
+    console.log("returnPage");
+    history("/secret/HomePage");
+  };
+
   return (
     <main className='bg-blue-300 h-dvh w-dvw'>
-      <div className='bg-white w-dvw h-[51.97px] lg:h-[70px]'>header</div>
-      <RiArrowGoBackFill className='size-5 lg:size-8 m-4'/>
+      <div><RiArrowGoBackFill className='size-5 lg:size-8 m-4 mt-20' onClick={returnPage}/></div>
       <div className='Kaisei Tokumin text-base lg:text-lg mx-[10%] lg:mx-16 lg:ml-10 lg:mt-[10%] my-12 lg:float-left'>
         <p>カテゴリー入力</p>
         <CategoryBox elseCategory={false}/>

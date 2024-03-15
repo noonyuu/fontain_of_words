@@ -10,22 +10,13 @@ import HomePage from "./page/HomePage";
 import SavePage from "./page/SavePage";
 import UploadPage from "./page/UploadPage";
 import TabBar from "./component/TabBar";
-import CategoryPage_category from "./page/CategoryPage_category";
+import CategoryPage_category from "./page/CategoryPage";
 import Modal from "./component/Modal";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
-    {/* 呼び出すページ */}
-    {/* <RoginPage /> ログインページ */}
-    {/* <NewAccountPage /> 新規登録 */}
-    {/* <HomePage /> ホームページ */}
-    {/* <VoicePage /> 録音ページ */}
-    {/* <UploadPage />　テキストアップロードページ */}
-    {/* <SavePage /> 結果保存ページ */}
-    {/* <CategoryPage_category /> 単語帳カテゴリーページ */}
-    <Modal word1="続ける" word2="終了"/>
-    {/* <App /> */}
+    <App />
   </React.StrictMode>
 );
 
