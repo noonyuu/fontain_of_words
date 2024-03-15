@@ -44,7 +44,7 @@ function connect_ws() {
         if (try_count > 5) {
             return;
         }
-        
+
         connect_ws();
     }
 }
@@ -117,6 +117,12 @@ function Init() {
 }
 
 function Start() {
+    if (!is_connected) {
+        try_count = 0;
+        connect_ws();
+    }
+
+
     //接続済みなら音声認識開始
     if (is_connected) {
         is_restart = true;
