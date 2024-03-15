@@ -91,7 +91,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
               </svg>
             </div>
           </div>
-          {isOpen && items ? (
+          {isOpen && items && items.books ? (
             <div className="absolute z-10 w-full border bg-white">
               {items.books.map((item) => (
                 <div
