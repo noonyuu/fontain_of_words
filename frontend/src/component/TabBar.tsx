@@ -15,16 +15,20 @@ const TabBar: React.FC = () => {
 
   // ローカルストレージからデータを取得
   useEffect(() => {
-    const savedWordsList = JSON.parse(
+    const savedWordsList: string[] = JSON.parse(
       localStorage.getItem("wordsList") || "[]",
+    );
+    // 重複を省いた単語リストを作成
+    const uniqueWordsList = savedWordsList.filter(
+      (word, index, self) => index === self.findIndex((w) => w === word),
     );
 
     setSaveTest(localStorage.getItem("result_result") || "");
 
     // ブックマークの初期状態を設定
-    const initialBookmarks = savedWordsList.map(() => false);
+    const initialBookmarks = uniqueWordsList.map(() => false);
     // 単語とブックマークの状態をまとめる
-    const wordsWithBookmarks = savedWordsList.map(
+    const wordsWithBookmarks = uniqueWordsList.map(
       (word: string, index: number) => ({
         word,
         bookmark: initialBookmarks[index],
