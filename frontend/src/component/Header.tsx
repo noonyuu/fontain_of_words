@@ -2,13 +2,34 @@ import React, { useContext, useState } from "react";
 import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
 
-import { Logout } from "../scripts/Auth";
+import { Logout,GetInfo } from "../scripts/Auth";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const history = useNavigate();
   const { profileModal, setProfileModal } = useContext(GlobalContext);
   const [openMenu, setOpenMenu] = useState(false);
+  const [iconurl, SetIcon] = useState(mainIcon.toString());
+  const [name, SetName] = useState("");
+
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    // すでに初期化されていたら処理を抜ける
+    if (!loading) {
+      return;
+    }
+
+    GetInfo().then((result) => {
+      const [success, user] = result;
+      console.log(user.icon);
+      SetName(user.name);
+      SetIcon(user.icon);
+    });
+
+    // 初期化済みのフラグを立てる
+    setLoading(false);
+  }, [loading]);
 
   // メニューを開く処理
   const handleMenuOpen = () => {
@@ -28,7 +49,7 @@ const Header = () => {
   return (
     <header className="fixed top-0 z-50 my-auto flex h-16 w-full border-b-2 border-main bg-white py-2">
       <button className="z-50 ml-4 size-10 justify-start rounded-full">
-        <img src={mainIcon} alt="mainIcon" />
+        <img src={iconurl} alt="mainIcon" />
       </button>
       <div className="mr-4 flex flex-grow justify-end">
         <button
@@ -72,12 +93,12 @@ const Header = () => {
           {/* 画面上部に配置 */}
           <div>
             <img
-              src={mainIcon}
+              src={iconurl}
               alt="UserIcon"
               className="mx-auto mt-16 size-24 rounded-full"
             />
             <p className="mt-4 text-center text-base">
-              {/* user:<span>kento</span> */}
+              user:<span>{name}</span>
             </p>
           </div>
           {/* 画面下部に配置 */}

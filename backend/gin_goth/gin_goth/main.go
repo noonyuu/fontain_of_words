@@ -35,6 +35,8 @@ import (
 	"github.com/mileusna/useragent"
 
 	"github.com/JGLTechnologies/gin-rate-limit"
+
+	"github.com/gin-contrib/cors"
 )
 
 func contextWithProviderName(ctx *gin.Context, provider string) *http.Request {
@@ -132,6 +134,10 @@ func main() {
 
 	//ルータ
 	router := gin.Default()
+
+	//TODO CORS
+	//router.Use(cors.Default())
+	_ = cors
 
 	ratelimit_store := ratelimit.InMemoryStore(&ratelimit.InMemoryOptions{
 		Rate:  time.Second,

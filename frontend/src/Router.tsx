@@ -33,6 +33,7 @@ const Router = () => {
       }
     };
 
+    //TODO 絶対戻す
     fetchUserInfo();
   }, []);
 

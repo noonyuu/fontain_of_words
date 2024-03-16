@@ -6,7 +6,7 @@ let wsconn = null;
 let is_first = false;
 let is_restart = true;
 let recognition = null;
-const ws_url = "wss://fountain-of-words.noonyuu.com/app/ws";
+const ws_url = "wss://localhost:8443/app/ws";
 // const ws_url = "wss://localhost:8443/app/ws";
 
 export const connect_ws = () => {

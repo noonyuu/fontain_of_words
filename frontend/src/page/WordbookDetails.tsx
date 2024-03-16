@@ -13,6 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const WordbookDetails = () => {
   const history = useNavigate();
     const [title, setTitle] = useState("");
+    const [book_name, setName] = useState("");
     const [wordid, setID] = useState("");
     const [link, setLink] = useState("");
     const [selected, setSelected] = useState(false);
@@ -38,8 +39,11 @@ const WordbookDetails = () => {
         }
 
         Get_words(id).then((data: any) => {
+            console.log(data);
+            setName(data.name);
             setWord(data.data);
         });
+        
         // 初期化済みのフラグを立てる
         setLoading(false);
     }, [loading]);
@@ -173,16 +177,52 @@ const WordbookDetails = () => {
                     placeholder="検索"
                   />
                 </div>
-              </div>
-              {/* list */}
-              <div className="mt-4 lg:ml-8 lg:mr-24">
-                <ul className="w-full">
-                  <li className="w-full border-t-[1px] border-gray-300"></li>
-                  {words.map((word, index) => (
-                    <li
-                      key={index}
-                      className="flex w-full items-center justify-between border-b-[1px] border-gray-300 py-4 pl-8 lg:border-[1px]"
-                      onClick={() => Detail(index)}
+                <h2 className="relative mr-6 mt-8 flex h-10 w-24 items-center justify-center bg-main font-bold leading-4 text-white after:absolute after:-right-10 after:top-0 after:block after:h-10 after:border-[20px] after:border-r-[20px] after:border-solid after:border-main after:border-r-transparent">
+                    #{book_name}
+                </h2>
+                <div className="lg:flex lg:h-[calc(100%-7.75rem)]">
+                    {/* 検索欄 */}
+                    <div className="w-full lg:w-2/5">
+                        <div className="my-2 flex justify-center lg:ml-8 lg:justify-start">
+                            <div className="relative mt-2 rounded-md shadow-sm">
+                                {/* icon */}
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center rounded-md bg-gray-200 pl-3">
+                                    <span className="flex items-center text-gray-500 sm:text-sm">
+                                        <IoMdSearch />
+                                    </span>
+                                </div>
+                                {/* 入力 */}
+                                <input
+                                    type="text"
+                                    name="price"
+                                    id="price"
+                                    className="block w-full rounded-md border-0 bg-gray-200 py-1.5 pl-9 pr-20 text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 lg:pr-32"
+                                    placeholder="検索"
+                                />
+                            </div>
+                        </div>
+                        {/* list */}
+                        <div className="mt-4 lg:ml-8 lg:mr-24">
+                            <ul className="w-full">
+                                <li className="w-full border-t-[1px] border-gray-300"></li>
+                                {words.map((word, index) => (
+                                    <li
+                                        key={index}
+                                        className="flex w-full items-center justify-between border-b-[1px] border-gray-300 py-4 pl-8 lg:border-[1px]"
+                                        onClick={() => Detail(index)}
+                                    >
+                                        <span>{word["Word"]}</span>
+                                        <button type="button" className="pr-4">
+                                            <CiCircleQuestion size={24} />
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                    {/* ディスクトップ単語説明 */}
+                    <div
+                        className={`${selected ? "mr-4 hidden h-full w-3/5 rounded-[3rem] border-2 shadow-lg lg:inline-block" : "hidden"}`}
                     >
                       <span>{word["Word"]}</span>
                       <button type="button" className="pr-4">
