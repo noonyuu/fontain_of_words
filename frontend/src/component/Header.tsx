@@ -1,9 +1,12 @@
 import React, { useContext, useState } from "react";
 import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
+
 import { Logout,GetInfo } from "../scripts/Auth";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const history = useNavigate();
   const { profileModal, setProfileModal } = useContext(GlobalContext);
   const [openMenu, setOpenMenu] = useState(false);
   const [iconurl, SetIcon] = useState(mainIcon.toString());
@@ -39,6 +42,7 @@ const Header = () => {
     const result = await Logout();
     if (result) {
       console.log("ログアウトしました");
+      history("/LoginPage");
     }
   };
 
