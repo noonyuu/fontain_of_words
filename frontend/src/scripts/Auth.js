@@ -1,5 +1,5 @@
 //ベースパス
-const base_path = "/";
+const base_path = "https://localhost:8443/";
 
 //トークンを更新する (成功したら true) それ以外は false
 export const Refresh_Token = async () => {

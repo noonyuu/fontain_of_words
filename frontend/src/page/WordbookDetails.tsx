@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 
 const WordbookDetails = () => {
     const [title, setTitle] = useState("");
+    const [book_name, setName] = useState("");
     const [wordid, setID] = useState("");
     const [link, setLink] = useState("");
     const [selected, setSelected] = useState(false);
@@ -37,8 +38,11 @@ const WordbookDetails = () => {
         }
 
         Get_words(id).then((data: any) => {
+            console.log(data);
+            setName(data.name);
             setWord(data.data);
         });
+        
         // 初期化済みのフラグを立てる
         setLoading(false);
     }, [loading]);
@@ -150,7 +154,7 @@ const WordbookDetails = () => {
                     <BsArrowReturnLeft size={24} />
                 </div>
                 <h2 className="relative mr-6 mt-8 flex h-10 w-24 items-center justify-center bg-main font-bold leading-4 text-white after:absolute after:-right-10 after:top-0 after:block after:h-10 after:border-[20px] after:border-r-[20px] after:border-solid after:border-main after:border-r-transparent">
-                    #IT
+                    #{book_name}
                 </h2>
                 <div className="lg:flex lg:h-[calc(100%-7.75rem)]">
                     {/* 検索欄 */}

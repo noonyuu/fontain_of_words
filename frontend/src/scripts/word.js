@@ -106,7 +106,7 @@
 //     return null;
 // }
 
-const base_path = "https://fountain-of-words.noonyuu.com/";
+const base_path = "https://localhost:8443/";
 // const base_path = "https://localhost:8443/";
 
 export const Create_word_book = async function create_word_book(name) {
@@ -195,6 +195,7 @@ export const Get_words = async function Get_Words(bookid) {
       return {
         success: true,
         data: res_data["words"],
+        name: res_data["name"],
       };
     }
   } catch (ex) {
@@ -205,6 +206,7 @@ export const Get_words = async function Get_Words(bookid) {
   return {
     success: false,
     data: [],
+    name: "",
   };
 };
 

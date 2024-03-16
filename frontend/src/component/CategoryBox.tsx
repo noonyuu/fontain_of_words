@@ -36,7 +36,7 @@ const CategoryBox: React.FC<Btnprops> = ({ elseCategory }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://fountain-of-words.noonyuu.com/app/wordbook/get_books",
+          "https://localhost:8443/app/wordbook/get_books",
         );
         const data: BooksResponse = await response.json();
         setItems(data);

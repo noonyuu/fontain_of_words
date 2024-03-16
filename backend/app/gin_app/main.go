@@ -16,7 +16,7 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	//TOOD 開発用
+	//TODO 開発用
 	"github.com/gin-contrib/cors"
 )
 
@@ -113,7 +113,7 @@ func main() {
 		user := user_data.(*auth_grpc.User)
 		log.Println(user)
 
-		ctx.Redirect(http.StatusTemporaryRedirect, "/statics/index.html")
+		ctx.Redirect(http.StatusTemporaryRedirect, "/")
 	})
 
 	router.GET("/ping", func(ctx *gin.Context) {
@@ -264,7 +264,7 @@ func main() {
 		}
 
 		//成功
-		ctx.JSON(200, gin.H{"words": result})
+		ctx.JSON(200, gin.H{"name" : wordbook.Name,"words": result})
 	})
 
 	word_group.POST("/delete", func(ctx *gin.Context) {
