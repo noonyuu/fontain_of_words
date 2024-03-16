@@ -136,7 +136,8 @@ func main() {
 	router := gin.Default()
 
 	//TODO CORS
-	router.Use(cors.Default())
+	//router.Use(cors.Default())
+	_ = cors
 
 	ratelimit_store := ratelimit.InMemoryStore(&ratelimit.InMemoryOptions{
 		Rate:  time.Second,

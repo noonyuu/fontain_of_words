@@ -15,9 +15,8 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/gorilla/websocket"
-
 	//TODO 開発用
-	"github.com/gin-contrib/cors"
+	//"github.com/gin-contrib/cors"
 )
 
 var upgrader = websocket.Upgrader{
@@ -93,7 +92,7 @@ func main() {
 	router := gin.Default()
 
 	//TODO CORS
-	router.Use(cors.Default())
+	//router.Use(cors.Default())
 
 	//認証用ミドルウェア
 	router.Use(AuthMiddleware())
@@ -264,7 +263,7 @@ func main() {
 		}
 
 		//成功
-		ctx.JSON(200, gin.H{"name" : wordbook.Name,"words": result})
+		ctx.JSON(200, gin.H{"name": wordbook.Name, "words": result})
 	})
 
 	word_group.POST("/delete", func(ctx *gin.Context) {
