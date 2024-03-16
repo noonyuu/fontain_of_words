@@ -1,5 +1,5 @@
 //ベースパス
-const base_path = "https://localhost:8443/";
+const base_path = "https://fountain-of-words.noonyuu.com/";
 
 //トークンを更新する (成功したら true) それ以外は false
 export const Refresh_Token = async () => {

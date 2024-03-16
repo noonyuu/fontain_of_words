@@ -106,8 +106,8 @@
 //     return null;
 // }
 
-const base_path = "https://localhost:8443/";
-// const base_path = "https://localhost:8443/";
+const base_path = "https://fountain-of-words.noonyuu.com/";
+// const base_path = "https://fountain-of-words.noonyuu.com/";
 
 export const Create_word_book = async function create_word_book(name) {
   try {
