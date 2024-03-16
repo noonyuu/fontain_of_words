@@ -3,8 +3,10 @@ import mainIcon from "../assets/app.webp";
 import { GlobalContext } from "../context/GlobalContext";
 
 import { Logout } from "../scripts/Auth";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const history = useNavigate();
   const { profileModal, setProfileModal } = useContext(GlobalContext);
   const [openMenu, setOpenMenu] = useState(false);
 
@@ -19,6 +21,7 @@ const Header = () => {
     const result = await Logout();
     if (result) {
       console.log("ログアウトしました");
+      history("/LoginPage");
     }
   };
 
@@ -74,7 +77,7 @@ const Header = () => {
               className="mx-auto mt-16 size-24 rounded-full"
             />
             <p className="mt-4 text-center text-base">
-              user:<span>kento</span>
+              {/* user:<span>kento</span> */}
             </p>
           </div>
           {/* 画面下部に配置 */}
