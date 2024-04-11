@@ -13,7 +13,7 @@ import (
 var (
 	Secret = []byte("hAUKO10XC6Ck8aUeu8LsEwFT5k5QatzXaVXTcVhJ7JCXVafVWkQ7ExyAADRCCF8t")
 )
-
+ 
 func jwt_init() error {
 	//古いトークンを削除する
 	go Cleanup_OldToken(time.Duration(time.Second * 1))
