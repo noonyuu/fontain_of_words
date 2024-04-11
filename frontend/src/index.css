@@ -1,17 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Kaisei+Tokumin&display=swap");
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* height: 100vh; */
+  font-family: "Kaisei Tokumin", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+html {
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs >.ant-tabs-nav .ant-tabs-nav-list{
+  justify-content: space-between;
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs >.ant-tabs-nav .ant-tabs-nav-wrap {
+  flex-direction: column;
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs {
+  font-family: 'Kaisei Tokumin';
+}
+
+:where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs .ant-tabs-content-holder {
+  overflow-y: scroll;
+  height: 40%;
+}
+
+.css-dev-only-do-not-override-1ae8k9u {
+  height: 100%;
+}
+
+/* レスポンシブ設定 */
+@media screen and (min-width: 1024px) {
+  :where(.css-dev-only-do-not-override-1ae8k9u).ant-tabs {
+    font-size: 24px;
+  }
 }

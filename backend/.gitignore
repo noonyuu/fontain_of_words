@@ -12,8 +12,11 @@ EXPO.md
 /postgresql
 
 .env
+.DS_Store
 
 gin_goth/Secret/microsoft-identity-association.json
 
 server.crt
 server.key
+
+/nginx/statics/build
